@@ -71,7 +71,7 @@ class CommentsPage extends StatelessWidget {
                 ),
 
                 Text(
-                  'T.me:@Ayubxon2008',
+                  'T.me:@ayyubxon_akhmadjonov',
                   textAlign: TextAlign.end,
                   style: GoogleFonts.poppins(
                     color:

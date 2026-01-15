@@ -15,13 +15,11 @@ class NamozVaqtlariBloc extends Bloc<NamozVaqtlariEvent, NamozVaqtlariState> {
     Emitter<NamozVaqtlariState> emmit,
   ) async {
     emmit(ProccesNamozVaqtlariState());
-
     try {
       final dio = Dio();
       final response = await dio.get(
         'https://islomapi.uz/api/present/day?region=${event.location}',
       );
-
       if (response.statusCode == 200) {
         NamozTime time = NamozTime.fromJson(response.data);
 

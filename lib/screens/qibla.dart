@@ -26,33 +26,24 @@ class _QiblahScreenState extends State<QiblahScreen>
       duration: const Duration(milliseconds: 500),
     );
     _animation = Tween(begin: 0.0, end: 0.0).animate(_animationController);
-
     _permissionFuture = _checkPermissions();
   }
 
   Future<bool> _checkPermissions() async {
-    try {
-      if (!await Permission.location.serviceStatus.isEnabled) {
-        await _showLocationServiceDialog();
-        return false;
-      }
-
-      final status = await Permission.location.status;
-      if (status.isGranted) {
-        return true;
-      }
-
-      final result = await Permission.location.request();
-      return result == PermissionStatus.granted;
-    } catch (e) {
-      debugPrint('Permission error: $e');
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Xatolik yuz berdi: $e')));
-      }
-      return false;
+    bool isServiceEnabled = await Permission.location.serviceStatus.isEnabled;
+    if (!isServiceEnabled) {
+      await _showLocationServiceDialog();
     }
+
+    var status = await Permission.location.status;
+
+    if (status.isGranted) {
+      return true;
+    }
+
+    final result = await Permission.location.request();
+
+    return result == PermissionStatus.granted;
   }
 
   Future<void> _showLocationServiceDialog() async {
@@ -60,14 +51,14 @@ class _QiblahScreenState extends State<QiblahScreen>
       context: context,
       builder:
           (context) => AlertDialog(
-            title: const Text('Location xizmati o\'chirilgan'),
+            title: const Text('Location o‘chirilgan'),
             content: const Text(
-              'Iltimos, qurilmangizning Location xizmatini yoqing',
+              'Iltimos, qurilmangizda Location xizmatini yoqing',
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
+                child: const Text('Continue'),
               ),
             ],
           ),
@@ -77,88 +68,75 @@ class _QiblahScreenState extends State<QiblahScreen>
   @override
   void dispose() {
     _animationController.dispose();
+    FlutterQiblah().dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: FutureBuilder<bool>(
-          future: _permissionFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
+    return Scaffold(
+      body: FutureBuilder<bool>(
+        future: _permissionFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            if (snapshot.hasError || !(snapshot.data ?? false)) {
-              return const Center(
-                child: Text("Ruxsat berilmadi yoki xatolik yuz berdi."),
-              );
-            }
-
-            return StreamBuilder<QiblahDirection>(
-              stream: FlutterQiblah.qiblahStream,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Text("Xatolik yuz berdi: ${snapshot.error}"),
-                  );
-                }
-
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: Text("Kechirasiz, qandaydir muammo bor."),
-                  );
-                }
-
-                final qiblahDirection = snapshot.data!;
-                final end = (qiblahDirection.qiblah * (pi / 180) * -1);
-
-                _animation = Tween(
-                  begin: begin,
-                  end: end,
-                ).animate(_animationController);
-                begin = end;
-                _animationController.forward(from: 0);
-
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "${qiblahDirection.direction.toInt()}°",
-                        style: TextStyle(
-                          fontSize: 30,
-                          color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? Colors.black
-                                  : Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        height: 300,
-                        child: AnimatedBuilder(
-                          animation: _animation,
-                          builder:
-                              (context, child) => Transform.rotate(
-                                angle: _animation.value,
-                                child: Image.asset('assets/images/qibla.png'),
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+          if (!snapshot.hasData || !(snapshot.data ?? false)) {
+            return const Center(
+              child: Text("Iltimos, location ruxsatini bering."),
             );
-          },
-        ),
+          }
+
+          return StreamBuilder<QiblahDirection>(
+            stream: FlutterQiblah.qiblahStream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: Text("Ma'lumot olinmadi, qayta urinib ko‘ring."),
+                );
+              }
+
+              final qiblahDirection = snapshot.data!;
+              final end = (qiblahDirection.qiblah * (pi / 180) * -1);
+
+              _animation = Tween(
+                begin: begin,
+                end: end,
+              ).animate(_animationController);
+              begin = end;
+              _animationController.forward(from: 0);
+
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${qiblahDirection.direction.toInt()}°",
+                      style: const TextStyle(fontSize: 30),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 300,
+                      child: AnimatedBuilder(
+                        animation: _animation,
+                        builder:
+                            (context, child) => Transform.rotate(
+                              angle: _animation.value,
+                              child: Image.asset('assets/images/qibla.png'),
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
