@@ -7,8 +7,9 @@ import 'package:sajda_app/app/constants/globals.dart';
 import 'package:sajda_app/bloc_state_manegment/disableSura/disable_sura_bloc.dart';
 import 'package:sajda_app/bloc_state_manegment/theme_bloc/theme_mode_bloc.dart';
 import 'package:sajda_app/models/ayat.dart';
-import 'package:sajda_app/models/isar_sura/user.dart';
 import 'package:sajda_app/models/surah.dart';
+
+import '../models/isar_sura/user.dart';
 
 class DetailScreen extends StatefulWidget {
   final int noSurat;
@@ -68,22 +69,22 @@ class _DetailScreenState extends State<DetailScreen> {
             List<Ayat> ayat = snapshot.data!;
             return Scaffold(
               backgroundColor:
-                  Theme.of(context).brightness == Brightness.dark
-                      ? Colors.black.withOpacity(0.7)
-                      : Colors.white,
+              Theme.of(context).brightness == Brightness.dark
+                  ? Colors.black.withOpacity(0.7)
+                  : Colors.white,
               appBar: _appBar(context: context),
               body: NestedScrollView(
                 headerSliverBuilder:
                     (context, innerBoxIsScrolled) => [
-                      SliverToBoxAdapter(
-                        child: _details(
-                          surahLen: ayat.length,
-                          suratName: widget.suratName,
-                          suratNameLatin: widget.suratNameLatin,
-                          location: widget.location,
-                        ),
-                      ),
-                    ],
+                  SliverToBoxAdapter(
+                    child: _details(
+                      surahLen: ayat.length,
+                      suratName: widget.suratName,
+                      suratNameLatin: widget.suratNameLatin,
+                      location: widget.location,
+                    ),
+                  ),
+                ],
                 body: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: ListView.separated(
@@ -103,7 +104,6 @@ class _DetailScreenState extends State<DetailScreen> {
                       );
                     },
                     itemCount: ayat.length,
-                    //  surah.jumlahAyat + (noSurat == 1 ? -1 : 0),
                     separatorBuilder: (context, index) => Container(),
                   ),
                 ),
@@ -127,9 +127,9 @@ class _DetailScreenState extends State<DetailScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
             color:
-                Theme.of(context).brightness == Brightness.light
-                    ? Colors.grey[400]
-                    : gray,
+            Theme.of(context).brightness == Brightness.light
+                ? Colors.grey[400]
+                : gray,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
@@ -155,30 +155,31 @@ class _DetailScreenState extends State<DetailScreen> {
               Icon(
                 Icons.share_outlined,
                 color:
-                    Theme.of(context).brightness == Brightness.light
-                        ? Colors.black
-                        : Colors.white,
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
               ),
               const SizedBox(width: 16),
               Icon(
                 Icons.play_arrow_rounded,
                 color:
-                    Theme.of(context).brightness == Brightness.light
-                        ? Colors.black
-                        : Colors.white,
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
                 size: 30,
               ),
               const SizedBox(width: 16),
               IconButton(
                 onPressed: () async {
                   if (ayat.isSaved != true) {
-                    User user =
-                        User()
-                          ..id = int.parse(ayat.id)
-                          ..nameAr = ayat.ar
-                          ..nameUz = ayat.idn != "" ? ayat.idn : ayat.tr
-                          ..suraIndex = int.parse(ayat.surah)
-                          ..ayatIndex = int.parse(ayat.nomor);
+                    // Hive uchun User yaratish
+                    User user = User(
+                      id: int.parse(ayat.id),
+                      nameAr: ayat.ar,
+                      nameUz: ayat.idn != "" ? ayat.idn : ayat.tr,
+                      suraIndex: int.parse(ayat.surah),
+                      ayatIndex: int.parse(ayat.nomor),
+                    );
                     BlocProvider.of<DisableSuraBloc>(
                       context,
                     ).add(AddDisabledSuraEvent(user));
@@ -189,21 +190,21 @@ class _DetailScreenState extends State<DetailScreen> {
                   }
                 },
                 icon:
-                    ayat.isSaved == true
-                        ? Icon(
-                          Icons.bookmark,
-                          color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? Colors.black
-                                  : Colors.white,
-                        )
-                        : Icon(
-                          Icons.bookmark_outline,
-                          color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? Colors.black
-                                  : Colors.white,
-                        ),
+                ayat.isSaved == true
+                    ? Icon(
+                  Icons.bookmark,
+                  color:
+                  Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white,
+                )
+                    : Icon(
+                  Icons.bookmark_outline,
+                  color:
+                  Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white,
+                ),
               ),
             ],
           ),
@@ -213,9 +214,9 @@ class _DetailScreenState extends State<DetailScreen> {
           ayat.ar,
           style: GoogleFonts.amiri(
             color:
-                Theme.of(context).brightness == Brightness.light
-                    ? Colors.black.withOpacity(0.8)
-                    : Colors.white,
+            Theme.of(context).brightness == Brightness.light
+                ? Colors.black.withOpacity(0.8)
+                : Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
@@ -343,9 +344,9 @@ class _DetailScreenState extends State<DetailScreen> {
           icon: Icon(
             Icons.arrow_back_ios,
             color:
-                Theme.of(context).brightness == Brightness.light
-                    ? Colors.black.withOpacity(0.8)
-                    : text,
+            Theme.of(context).brightness == Brightness.light
+                ? Colors.black.withOpacity(0.8)
+                : text,
           ),
         ),
         const SizedBox(width: 50),
@@ -355,9 +356,9 @@ class _DetailScreenState extends State<DetailScreen> {
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color:
-                Theme.of(context).brightness == Brightness.light
-                    ? Colors.black.withOpacity(0.8)
-                    : Colors.white,
+            Theme.of(context).brightness == Brightness.light
+                ? Colors.black.withOpacity(0.8)
+                : Colors.white,
           ),
         ),
         const Spacer(),
@@ -366,35 +367,35 @@ class _DetailScreenState extends State<DetailScreen> {
           builder: (context, state) {
             return state is SetDarkThemeModeState
                 ? IconButton(
-                  onPressed: () {
-                    BlocProvider.of<ThemeModeBloc>(
-                      context,
-                    ).add(SetLightThemeEvent());
-                  },
-                  icon: Image.asset(
-                    'assets/images/moon.png',
-                    color:
-                        Theme.of(context).brightness == Brightness.light
-                            ? Colors.black.withOpacity(0.8)
-                            : text,
-                    height: 25,
-                  ),
-                )
+              onPressed: () {
+                BlocProvider.of<ThemeModeBloc>(
+                  context,
+                ).add(SetLightThemeEvent());
+              },
+              icon: Image.asset(
+                'assets/images/moon.png',
+                color:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.8)
+                    : text,
+                height: 25,
+              ),
+            )
                 : IconButton(
-                  onPressed: () {
-                    BlocProvider.of<ThemeModeBloc>(
-                      context,
-                    ).add(SetDarkThemeEvent());
-                  },
-                  icon: Image.asset(
-                    "assets/images/sun.png",
-                    color:
-                        Theme.of(context).brightness == Brightness.light
-                            ? Colors.black.withOpacity(0.8)
-                            : text,
-                    height: 25,
-                  ),
-                );
+              onPressed: () {
+                BlocProvider.of<ThemeModeBloc>(
+                  context,
+                ).add(SetDarkThemeEvent());
+              },
+              icon: Image.asset(
+                "assets/images/sun.png",
+                color:
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.8)
+                    : text,
+                height: 25,
+              ),
+            );
           },
         ),
       ],

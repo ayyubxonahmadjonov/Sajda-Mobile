@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               children: [
                 Text(
-                  'Versiya: 1.0.0',
+                  'Versiya: 1.0.1',
                   style: GoogleFonts.poppins(
                     color:
                         Theme.of(context).brightness == Brightness.light
@@ -274,33 +274,38 @@ class _HomeScreenState extends State<HomeScreen> {
                                     times(
                                       "Bomdod",
                                       "bomdod",
-                                      state.time.times!.tongSaharlik!
-                                          .toString(),
+                                      state.time.times?.tongSaharlik
+                                              ?.toString() ??
+                                          "",
                                     ),
                                     times(
                                       "Quyosh",
                                       "sun2",
-                                      state.time.times!.quyosh!.toString(),
+                                      state.time.times?.quyosh?.toString() ??
+                                          "",
                                     ),
                                     times(
                                       "Peshin",
                                       "sun2",
-                                      state.time.times!.peshin!.toString(),
+                                      state.time.times?.peshin?.toString() ??
+                                          "",
                                     ),
                                     times(
                                       "Asr",
                                       "asr",
-                                      state.time.times!.asr!.toString(),
+                                      state.time.times?.asr?.toString() ?? "",
                                     ),
                                     times(
                                       "Shom",
                                       "shom",
-                                      state.time.times!.shomIftor!.toString(),
+                                      state.time.times?.shomIftor?.toString() ??
+                                          "",
                                     ),
                                     times(
                                       "Xufton",
                                       "hufton",
-                                      state.time.times!.hufton!.toString(),
+                                      state.time.times?.hufton?.toString() ??
+                                          "",
                                     ),
                                   ],
                                 )
@@ -538,6 +543,28 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   showAlertDialog(BuildContext context) {
+    final Map<String, String> cities = {
+      'Toshkent': 'Tashkent',
+      'Andijon': 'Andijan',
+      'Fargʻona': 'Fergana',
+      'Namangan': 'Namangan',
+      'Samarqand': 'Samarkand',
+      'Nukus': 'Nukus',
+      'Buxoro': 'Bukhara',
+      'Qarshi': 'Qarshi',
+      'Navoiy': 'Navoi',
+      'Xiva': 'Khiva',
+      "Qoʻqon": 'Kokand',
+      'Margʻilon': 'Margilan',
+      'Termiz': 'Termez',
+      'Urganch': 'Urgench',
+      'Angren': 'Angren',
+      'Chirchiq': 'Chirchiq',
+      'Shahrisabz': 'Shakhrisabz',
+      'Jizzax': 'Jizzakh',
+      'Guliston': 'Gulistan',
+    };
+
     showDialog(
       context: context,
       builder: (context) {
@@ -550,138 +577,49 @@ class _HomeScreenState extends State<HomeScreen> {
             horizontal: 10,
             vertical: 1,
           ),
-          content: Container(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        splashRadius: 10,
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          color:
-                              Theme.of(context).brightness == Brightness.light
-                                  ? const Color(0xFF040C23)
-                                  : Colors.white,
-                          size: 20,
-                        ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  children: [
+                    IconButton(
+                      splashRadius: 10,
+                      onPressed: () => Navigator.pop(context),
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        color:
+                            Theme.of(context).brightness == Brightness.light
+                                ? const Color(0xFF040C23)
+                                : Colors.white,
+                        size: 20,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Text(
-                          "Zikr va Duolar",
-                          style: GoogleFonts.poppins(
-                            color:
-                                Theme.of(context).brightness == Brightness.light
-                                    ? Colors.black
-                                    : Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          ),
-                        ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      "Viloyatni tanlang",
+                      style: GoogleFonts.poppins(
+                        color:
+                            Theme.of(context).brightness == Brightness.light
+                                ? Colors.black
+                                : Colors.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20,
                       ),
-                    ],
-                  ),
-                  viloyat("Toshkent", () {
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                ...cities.entries.map(
+                  (entry) => viloyat(entry.key, () {
                     BlocProvider.of<NamozVaqtlariBloc>(
                       context,
-                    ).add(GetNamozVaqtiEvent("Toshkent"));
-                    locationCity = 'Toshkent';
+                    ).add(GetNamozVaqtiEvent(entry.value));
+                    locationCity = entry.key;
                     Navigator.pop(context);
                   }),
-                  viloyat("Andijon", () {
-                    BlocProvider.of<NamozVaqtlariBloc>(
-                      context,
-                    ).add(GetNamozVaqtiEvent("Andijon"));
-                    locationCity = 'Andijon';
-                    Navigator.pop(context);
-                  }),
-                  viloyat("Farg'ona", () {
-                    BlocProvider.of<NamozVaqtlariBloc>(
-                      context,
-                    ).add(GetNamozVaqtiEvent("Farg'ona"));
-                    locationCity = 'Farg`ona';
-                    Navigator.pop(context);
-                  }),
-                  viloyat("Namangan", () {
-                    BlocProvider.of<NamozVaqtlariBloc>(
-                      context,
-                    ).add(GetNamozVaqtiEvent("Namangan"));
-                    locationCity = 'Namangan';
-                    Navigator.pop(context);
-                  }),
-                  viloyat("Guliston", () {
-                    BlocProvider.of<NamozVaqtlariBloc>(
-                      context,
-                    ).add(GetNamozVaqtiEvent("Guliston"));
-                    locationCity = 'Guliston';
-                    Navigator.pop(context);
-                  }),
-                  viloyat("Jizzax", () {
-                    BlocProvider.of<NamozVaqtlariBloc>(
-                      context,
-                    ).add(GetNamozVaqtiEvent("Jizzax"));
-                    locationCity = 'Jizzax';
-                    Navigator.pop(context);
-                  }),
-                  viloyat("Samarqand", () {
-                    BlocProvider.of<NamozVaqtlariBloc>(
-                      context,
-                    ).add(GetNamozVaqtiEvent("Samarqand"));
-                    locationCity = 'Samarqand';
-                    Navigator.pop(context);
-                  }),
-                  viloyat("Qarshi", () {
-                    BlocProvider.of<NamozVaqtlariBloc>(
-                      context,
-                    ).add(GetNamozVaqtiEvent("Qarshi"));
-                    locationCity = 'Qarshi';
-                    Navigator.pop(context);
-                  }),
-                  viloyat("Navoiy", () {
-                    BlocProvider.of<NamozVaqtlariBloc>(
-                      context,
-                    ).add(GetNamozVaqtiEvent("Navoiy"));
-                    locationCity = 'Navoiy';
-                    Navigator.pop(context);
-                  }),
-                  viloyat("Buxoro", () {
-                    BlocProvider.of<NamozVaqtlariBloc>(
-                      context,
-                    ).add(GetNamozVaqtiEvent("Buxoro"));
-                    locationCity = 'Buxoro';
-                    Navigator.pop(context);
-                  }),
-                  viloyat("Xiva", () {
-                    BlocProvider.of<NamozVaqtlariBloc>(
-                      context,
-                    ).add(GetNamozVaqtiEvent("Xiva"));
-                    locationCity = 'Xiva';
-                    Navigator.pop(context);
-                  }),
-                  viloyat("O'smat", () {
-                    BlocProvider.of<NamozVaqtlariBloc>(
-                      context,
-                    ).add(GetNamozVaqtiEvent("O'smat"));
-                    locationCity = 'O`smat';
-
-                    Navigator.pop(context);
-                  }),
-                  viloyat("Nukus", () {
-                    BlocProvider.of<NamozVaqtlariBloc>(
-                      context,
-                    ).add(GetNamozVaqtiEvent("Nukus"));
-                    locationCity = 'Nukus';
-
-                    Navigator.pop(context);
-                  }),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           actions: [],

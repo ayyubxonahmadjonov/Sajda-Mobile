@@ -1,63 +1,74 @@
 class NamozTime {
-  String? region;
-  String? date;
-  String? weekday;
+  String? region; // user tanlagan shahar
+  String? date;   // gregorian readable date
+  String? weekday; // haftaning kuni (inglizcha)
   Times? times;
 
   NamozTime({this.region, this.date, this.weekday, this.times});
 
-  NamozTime.fromJson(Map<String, dynamic> json) {
-    region = json['region'];
-    date = json['date'];
-    weekday = json['weekday'];
-    times = json['times'] != null ? Times.fromJson(json['times']) : null;
+  factory NamozTime.fromJson(Map<String, dynamic> json, {String? regionName}) {
+    final data = json['data'];
+    final timings = data['timings'];
+
+    // gregorian date va weekday
+    final dateInfo = data['date']['gregorian'];
+    final readableDate = data['date']['readable'];
+    final weekday = dateInfo['weekday']['en'];
+
+    return NamozTime(
+      region: regionName,
+      date: readableDate,
+      weekday: weekday,
+      times: Times.fromJson(timings),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['region'] = region;
-    data['date'] = date;
-    data['weekday'] = weekday;
-    if (times != null) {
-      data['times'] = times!.toJson();
-    }
-    return data;
+    return {
+      'region': region,
+      'date': date,
+      'weekday': weekday,
+      'times': times?.toJson(),
+    };
   }
 }
 
 class Times {
-  String? tongSaharlik;
-  String? quyosh;
-  String? peshin;
-  String? asr;
-  String? shomIftor;
-  String? hufton;
+  String? tongSaharlik; // Fajr
+  String? quyosh;       // Sunrise
+  String? peshin;       // Dhuhr
+  String? asr;          // Asr
+  String? shomIftor;    // Maghrib
+  String? hufton;       // Isha
 
-  Times(
-      {this.tongSaharlik,
-      this.quyosh,
-      this.peshin,
-      this.asr,
-      this.shomIftor,
-      this.hufton});
+  Times({
+    this.tongSaharlik,
+    this.quyosh,
+    this.peshin,
+    this.asr,
+    this.shomIftor,
+    this.hufton,
+  });
 
-  Times.fromJson(Map<String, dynamic> json) {
-    tongSaharlik = json['tong_saharlik'];
-    quyosh = json['quyosh'];
-    peshin = json['peshin'];
-    asr = json['asr'];
-    shomIftor = json['shom_iftor'];
-    hufton = json['hufton'];
+  factory Times.fromJson(Map<String, dynamic> json) {
+    return Times(
+      tongSaharlik: json['Fajr'],
+      quyosh: json['Sunrise'],
+      peshin: json['Dhuhr'],
+      asr: json['Asr'],
+      shomIftor: json['Maghrib'],
+      hufton: json['Isha'],
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['tong_saharlik'] = tongSaharlik;
-    data['quyosh'] = quyosh;
-    data['peshin'] = peshin;
-    data['asr'] = asr;
-    data['shom_iftor'] = shomIftor;
-    data['hufton'] = hufton;
-    return data;
+    return {
+      'tong_saharlik': tongSaharlik,
+      'quyosh': quyosh,
+      'peshin': peshin,
+      'asr': asr,
+      'shom_iftor': shomIftor,
+      'hufton': hufton,
+    };
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sajda_app/models/isar_sura/user.dart' show User;
-import 'package:sajda_app/services/iser_service/isar_service.dart';
+import 'package:sajda_app/services/iser_service/hive_service.dart';
 
 part 'get_sura_name_with_isar_event.dart';
 part 'get_sura_name_with_isar_state.dart';
@@ -16,7 +16,7 @@ class GetSuraNameWithIsarBloc
     StartSuraNameWithIsarEvent event,
     Emitter<GetSuraNameWithIsarState> emmit,
   ) async {
-    List<User> newUser = await IsarService().getAllSura();
+    List<User> newUser = await HiveService().getAllSura();
     emmit(StartSuraNameWithIsarState(newUser));
   }
 
@@ -24,7 +24,7 @@ class GetSuraNameWithIsarBloc
     RemoveSuraNameWithIsarEvent event,
     Emitter<GetSuraNameWithIsarState> emmit,
   ) async {
-    await IsarService().removeSura(event.id);
+    await HiveService().removeSura(event.id);
     emmit(ReloadingSuraNameWithIsarState());
   }
 }

@@ -12,4 +12,8 @@ class SuccesNamozVaqtlariState extends NamozVaqtlariState {
 
 class ProccesNamozVaqtlariState extends NamozVaqtlariState {}
 
-class FailureNamozVaqtlariState extends NamozVaqtlariState {}
+class FailureNamozVaqtlariState extends NamozVaqtlariState {
+  final String message;
+
+  FailureNamozVaqtlariState(this.message);
+}

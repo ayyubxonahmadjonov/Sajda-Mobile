@@ -1,47 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:sajda_app/utils/app_update/app_update_checker.dart';
+import 'package:sajda_app/utils/uinversal_update_service.dart';
+
 import 'app/constants/globals.dart';
 import 'bloc_state_manegment/disableSura/disable_sura_bloc.dart';
 import 'bloc_state_manegment/namoz_vaqtlari/namoz_vaqtlari_bloc.dart';
 import 'bloc_state_manegment/savedSuraBloc/get_sura_name_with_isar_bloc.dart';
 import 'bloc_state_manegment/theme_bloc/theme_mode_bloc.dart';
 import 'screens/splash_screen.dart';
-import 'services/iser_service/isar_service.dart';
+import 'services/iser_service/hive_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final hiveService = HiveService();
+  await hiveService.init();
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    IsarService().openDB();
+  State<MyApp> createState() => _MyAppState();
+}
 
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    _checkForUpdates();
+  }
+
+  Future<void> _checkForUpdates() async {
+    await Future.delayed(Duration(seconds: 2));
+
+    if (mounted) {
+      final updateService = UniversalUpdateService();
+      await updateService.checkForUpdate(context);
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => GetSuraNameWithIsarBloc(),
-        ),
-        BlocProvider(
-          create: (context) => DisableSuraBloc(),
-        ),
+        BlocProvider(create: (context) => GetSuraNameWithIsarBloc()),
+        BlocProvider(create: (context) => DisableSuraBloc()),
         BlocProvider(
           create: (context) => ThemeModeBloc()..add(SetDarkThemeEvent()),
         ),
         BlocProvider(
-          create: (context) =>
-              NamozVaqtlariBloc()..add(GetNamozVaqtiEvent("Toshkent")),
-        ),  
+          create:
+              (context) =>
+                  NamozVaqtlariBloc()..add(GetNamozVaqtiEvent("Toshkent")),
+        ),
       ],
       child: BlocBuilder<ThemeModeBloc, ThemeModeState>(
         builder: (context, state) {
           return MaterialApp(
             title: 'Sajda Mobile App',
-            themeMode: state is SetLightThemeModeState
-                ? ThemeMode.light
-                : ThemeMode.dark,
+            themeMode:
+                state is SetLightThemeModeState
+                    ? ThemeMode.light
+                    : ThemeMode.dark,
             theme: ThemeData(
               brightness: Brightness.light,
               scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
@@ -50,8 +71,9 @@ class MyApp extends StatelessWidget {
               ),
             ),
             darkTheme: ThemeData(
-              bottomNavigationBarTheme:
-                  BottomNavigationBarThemeData(backgroundColor: gray),
+              bottomNavigationBarTheme: BottomNavigationBarThemeData(
+                backgroundColor: gray,
+              ),
               brightness: Brightness.dark,
               scaffoldBackgroundColor: const Color(0xFF040C23),
               appBarTheme: const AppBarTheme(
@@ -63,7 +85,8 @@ class MyApp extends StatelessWidget {
           );
         },
       ),
-    );  }
+    );
+  }
 }
 //flutter pub run build_runner build
 //dart run build_runner build

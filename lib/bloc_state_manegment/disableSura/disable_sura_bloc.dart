@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sajda_app/models/isar_sura/user.dart';
-import 'package:sajda_app/services/iser_service/isar_service.dart';
+import 'package:sajda_app/services/iser_service/hive_service.dart';
 
 part 'disable_sura_event.dart';
 part 'disable_sura_state.dart';
@@ -16,7 +16,7 @@ class DisableSuraBloc extends Bloc<DisableSuraEvent, DisableSuraState> {
     StartDisableSuraEvent event,
     Emitter<DisableSuraState> emmit,
   ) async {
-    List<User> newUser = await IsarService().getAllSura();
+    List<User> newUser = await HiveService().getAllSura();
     List<int> indexes = [];
     for (var user in newUser) {
       indexes.add(user.id ?? 0);
@@ -30,7 +30,7 @@ class DisableSuraBloc extends Bloc<DisableSuraEvent, DisableSuraState> {
     RemoveDisabledSuraEvent event,
     Emitter<DisableSuraState> emmit,
   ) async {
-    await IsarService().removeSura(event.id);
+    await HiveService().removeSura(event.id);
     emmit(RemoveDisabledSuraState());
   }
 
@@ -38,7 +38,7 @@ class DisableSuraBloc extends Bloc<DisableSuraEvent, DisableSuraState> {
     AddDisabledSuraEvent event,
     Emitter<DisableSuraState> emmit,
   ) async {
-    await IsarService().saveSura(event.user);
+    await HiveService().saveSura(event.user);
     emmit(AddDisabledSuraState());
   }
 }
