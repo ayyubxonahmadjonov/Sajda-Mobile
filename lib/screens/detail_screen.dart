@@ -3,11 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:sajda_app/app/constants/globals.dart';
 import 'package:sajda_app/bloc_state_manegment/disableSura/disable_sura_bloc.dart';
 import 'package:sajda_app/bloc_state_manegment/theme_bloc/theme_mode_bloc.dart';
 import 'package:sajda_app/models/ayat.dart';
 import 'package:sajda_app/models/surah.dart';
+import 'package:sajda_app/services/audio_service/audio_service.dart';
+import 'package:sajda_app/utils/ayah_audio_utils.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../models/isar_sura/user.dart';
 
@@ -34,7 +38,27 @@ class _DetailScreenState extends State<DetailScreen> {
     String data = await rootBundle.loadString(
       'assets/datas/${widget.noSurat}.json',
     );
+
     return surahAyaFromJson(data);
+  }
+
+  int? _playingAyahId;
+  bool _isPlaying = false;
+
+  final AyahAudioService _audioService = AyahAudioService();
+  @override
+  void initState() {
+    super.initState();
+
+    // Player tugaganda iconni avtomatik qaytarish
+    _audioService.playerStateStream.listen((state) {
+      if (state.processingState == ProcessingState.completed) {
+        setState(() {
+          _isPlaying = false;
+          _playingAyahId = null;
+        });
+      }
+    });
   }
 
   @override
@@ -69,22 +93,22 @@ class _DetailScreenState extends State<DetailScreen> {
             List<Ayat> ayat = snapshot.data!;
             return Scaffold(
               backgroundColor:
-              Theme.of(context).brightness == Brightness.dark
-                  ? Colors.black.withOpacity(0.7)
-                  : Colors.white,
+                  Theme.of(context).brightness == Brightness.dark
+                      ? Colors.black.withOpacity(0.7)
+                      : Colors.white,
               appBar: _appBar(context: context),
               body: NestedScrollView(
                 headerSliverBuilder:
                     (context, innerBoxIsScrolled) => [
-                  SliverToBoxAdapter(
-                    child: _details(
-                      surahLen: ayat.length,
-                      suratName: widget.suratName,
-                      suratNameLatin: widget.suratNameLatin,
-                      location: widget.location,
-                    ),
-                  ),
-                ],
+                      SliverToBoxAdapter(
+                        child: _details(
+                          surahLen: ayat.length,
+                          suratName: widget.suratName,
+                          suratNameLatin: widget.suratNameLatin,
+                          location: widget.location,
+                        ),
+                      ),
+                    ],
                 body: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: ListView.separated(
@@ -127,9 +151,9 @@ class _DetailScreenState extends State<DetailScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           decoration: BoxDecoration(
             color:
-            Theme.of(context).brightness == Brightness.light
-                ? Colors.grey[400]
-                : gray,
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.grey[400]
+                    : gray,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
@@ -152,22 +176,72 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
               const Spacer(),
-              Icon(
-                Icons.share_outlined,
-                color:
-                Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
+              IconButton(
+                onPressed: () {
+                  final appUrl =
+                      "https://play.google.com/store/apps/details?id=uz.ayyubxon.sajda_app";
+                  final appMessage =
+                      "Salom! Shu ilovani yuklab olishingiz mumkin: $appUrl";
+
+                  Share.share(appMessage);
+                },
+                icon: Icon(
+                  Icons.share_outlined,
+                  color:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white,
+                ),
               ),
+
               const SizedBox(width: 16),
-              Icon(
-                Icons.play_arrow_rounded,
-                color:
-                Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
-                size: 30,
+              IconButton(
+                onPressed: () async {
+                  final ayahId = int.parse(ayat.id);
+
+                  if (_playingAyahId == ayahId) {
+                    if (_isPlaying) {
+                      // To'xtatish
+                      await _audioService.pause();
+                      setState(() {
+                        _isPlaying = false;
+                      });
+                    } else {
+                      // Qayta davom ettirish
+                      final url = getAyahAudioUrl(
+                        sura: ayat.surah,
+                        ayah: ayat.nomor,
+                      );
+                      await _audioService.play(url);
+                      setState(() {
+                        _isPlaying = true;
+                      });
+                    }
+                  } else {
+                    // Yangi oyat bosildi → eski to'xtaydi, yangi o'qiydi
+                    final url = getAyahAudioUrl(
+                      sura: ayat.surah,
+                      ayah: ayat.nomor,
+                    );
+                    await _audioService.play(url);
+                    setState(() {
+                      _playingAyahId = ayahId;
+                      _isPlaying = true;
+                    });
+                  }
+                },
+                icon: Icon(
+                  (_playingAyahId == int.parse(ayat.id) && _isPlaying)
+                      ? Icons.pause_rounded
+                      : Icons.play_arrow_rounded,
+                  size: 30,
+                  color:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white,
+                ),
               ),
+
               const SizedBox(width: 16),
               IconButton(
                 onPressed: () async {
@@ -190,21 +264,21 @@ class _DetailScreenState extends State<DetailScreen> {
                   }
                 },
                 icon:
-                ayat.isSaved == true
-                    ? Icon(
-                  Icons.bookmark,
-                  color:
-                  Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white,
-                )
-                    : Icon(
-                  Icons.bookmark_outline,
-                  color:
-                  Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white,
-                ),
+                    ayat.isSaved == true
+                        ? Icon(
+                          Icons.bookmark,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.black
+                                  : Colors.white,
+                        )
+                        : Icon(
+                          Icons.bookmark_outline,
+                          color:
+                              Theme.of(context).brightness == Brightness.light
+                                  ? Colors.black
+                                  : Colors.white,
+                        ),
               ),
             ],
           ),
@@ -214,9 +288,9 @@ class _DetailScreenState extends State<DetailScreen> {
           ayat.ar,
           style: GoogleFonts.amiri(
             color:
-            Theme.of(context).brightness == Brightness.light
-                ? Colors.black.withOpacity(0.8)
-                : Colors.white,
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.8)
+                    : Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
@@ -344,9 +418,9 @@ class _DetailScreenState extends State<DetailScreen> {
           icon: Icon(
             Icons.arrow_back_ios,
             color:
-            Theme.of(context).brightness == Brightness.light
-                ? Colors.black.withOpacity(0.8)
-                : text,
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.8)
+                    : text,
           ),
         ),
         const SizedBox(width: 50),
@@ -356,9 +430,9 @@ class _DetailScreenState extends State<DetailScreen> {
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color:
-            Theme.of(context).brightness == Brightness.light
-                ? Colors.black.withOpacity(0.8)
-                : Colors.white,
+                Theme.of(context).brightness == Brightness.light
+                    ? Colors.black.withOpacity(0.8)
+                    : Colors.white,
           ),
         ),
         const Spacer(),
@@ -367,35 +441,35 @@ class _DetailScreenState extends State<DetailScreen> {
           builder: (context, state) {
             return state is SetDarkThemeModeState
                 ? IconButton(
-              onPressed: () {
-                BlocProvider.of<ThemeModeBloc>(
-                  context,
-                ).add(SetLightThemeEvent());
-              },
-              icon: Image.asset(
-                'assets/images/moon.png',
-                color:
-                Theme.of(context).brightness == Brightness.light
-                    ? Colors.black.withOpacity(0.8)
-                    : text,
-                height: 25,
-              ),
-            )
+                  onPressed: () {
+                    BlocProvider.of<ThemeModeBloc>(
+                      context,
+                    ).add(SetLightThemeEvent());
+                  },
+                  icon: Image.asset(
+                    'assets/images/moon.png',
+                    color:
+                        Theme.of(context).brightness == Brightness.light
+                            ? Colors.black.withOpacity(0.8)
+                            : text,
+                    height: 25,
+                  ),
+                )
                 : IconButton(
-              onPressed: () {
-                BlocProvider.of<ThemeModeBloc>(
-                  context,
-                ).add(SetDarkThemeEvent());
-              },
-              icon: Image.asset(
-                "assets/images/sun.png",
-                color:
-                Theme.of(context).brightness == Brightness.light
-                    ? Colors.black.withOpacity(0.8)
-                    : text,
-                height: 25,
-              ),
-            );
+                  onPressed: () {
+                    BlocProvider.of<ThemeModeBloc>(
+                      context,
+                    ).add(SetDarkThemeEvent());
+                  },
+                  icon: Image.asset(
+                    "assets/images/sun.png",
+                    color:
+                        Theme.of(context).brightness == Brightness.light
+                            ? Colors.black.withOpacity(0.8)
+                            : text,
+                    height: 25,
+                  ),
+                );
           },
         ),
       ],

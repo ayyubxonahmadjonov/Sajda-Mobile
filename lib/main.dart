@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sajda_app/utils/app_update/app_update_checker.dart';
 import 'package:sajda_app/utils/uinversal_update_service.dart';
-
 import 'app/constants/globals.dart';
 import 'bloc_state_manegment/disableSura/disable_sura_bloc.dart';
 import 'bloc_state_manegment/namoz_vaqtlari/namoz_vaqtlari_bloc.dart';
@@ -26,22 +24,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    _checkForUpdates();
-  }
 
-  Future<void> _checkForUpdates() async {
-    await Future.delayed(Duration(seconds: 2));
-
-    if (mounted) {
-      final updateService = UniversalUpdateService();
-      await updateService.checkForUpdate(context);
-    }
-  }
   @override
   Widget build(BuildContext context) {
+    
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => GetSuraNameWithIsarBloc()),
@@ -58,6 +44,7 @@ class _MyAppState extends State<MyApp> {
       child: BlocBuilder<ThemeModeBloc, ThemeModeState>(
         builder: (context, state) {
           return MaterialApp(
+      
             title: 'Sajda Mobile App',
             themeMode:
                 state is SetLightThemeModeState

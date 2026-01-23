@@ -5,35 +5,30 @@ import 'package:sajda_app/utils/app_update/app_update_ios.dart';
 
 
 class UniversalUpdateService {
-  Future<void> checkForUpdate(BuildContext context) async {
+  Future<bool> checkForUpdate(BuildContext context) async {
     if (Platform.isAndroid) {
-      await _checkAndroidUpdate();
+      return await AndroidUpdateService().check();
     } else if (Platform.isIOS) {
-      await _checkIOSUpdate(context);
+      return await IOSUpdateService().check(context);
     }
+    return false;
   }
+}
 
-  Future<void> _checkAndroidUpdate() async {
+class AndroidUpdateService {
+  Future<bool> check() async {
     try {
-      AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
+      final info = await InAppUpdate.checkForUpdate();
 
-      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable) {
-        if (updateInfo.immediateUpdateAllowed) {
+      if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+        if (info.immediateUpdateAllowed) {
           await InAppUpdate.performImmediateUpdate();
-        }
-        else if (updateInfo.flexibleUpdateAllowed) {
-          await InAppUpdate.startFlexibleUpdate();
-          await InAppUpdate.completeFlexibleUpdate();
+          return true; // 🔒 update bor
         }
       }
     } catch (e) {
-      print('Android update xato: $e');
+      debugPrint('Android update error: $e');
     }
-  }
-
-  // iOS uchun
-  Future<void> _checkIOSUpdate(BuildContext context) async {
-    final appStoreService = AppUpdateService();
-    await appStoreService.checkForUpdate();
+    return false; // update yo‘q
   }
 }

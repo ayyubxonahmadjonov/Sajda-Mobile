@@ -18,15 +18,12 @@ class NamozVaqtlariBloc
   ) async {
     emit(ProccesNamozVaqtlariState());
    final date = DateFormat('dd-MM-yyyy').format(DateTime.now());
-      print(date);
     try {
       final dio = Dio();
-   print(event.location);
       final response = await dio.get(
         'https://api.aladhan.com/v1/timingsByCity/$date?city=${event.location}&country=Uzbekistan&method=2',
       );
         if (response.statusCode == 200) {
-          print(response.data);
   final data = response.data; 
   final NamozTime time = NamozTime.fromJson(data, regionName: event.location);
 

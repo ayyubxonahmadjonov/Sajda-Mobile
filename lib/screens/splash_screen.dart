@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sajda_app/screens/spashing.dart';
+import 'package:sajda_app/utils/uinversal_update_service.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import '../app/constants/globals.dart';
@@ -18,57 +19,46 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    startTimer();
+    _startFlow();
   }
 
-  void startTimer() {
-    Timer(const Duration(milliseconds: 500), () {
-      navigateUser();
-    });
+  Future<void> _startFlow() async {
+    await Future.delayed(Duration.zero);
+
+    await UniversalUpdateService().checkForUpdate(context);
+
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    if (!mounted) return;
+    _navigateUser();
   }
 
-  void navigateUser() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var status = prefs.getBool('splaw');
-    if (status == true) {
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) => const Home()),
-      );
-    } else {
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) => const Splashing()),
-      );
-    }
+  Future<void> _navigateUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final status = prefs.getBool('splaw') ?? false;
+
+    if (!mounted) return;
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => status ? const Home() : const Splashing(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height * 0.5,
-            child: Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: SvgPicture.asset(
-                  'assets/svgs/bismillah.svg',
-                  color:
-                      Theme.of(context).brightness == Brightness.light
-                          ? primary
-                          : Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ],
+      body: Center(
+        child: SvgPicture.asset(
+          'assets/svgs/bismillah.svg',
+          width: MediaQuery.of(context).size.width * 0.6,
+          color:
+              Theme.of(context).brightness == Brightness.light
+                  ? primary
+                  : Colors.white,
+        ),
       ),
     );
   }

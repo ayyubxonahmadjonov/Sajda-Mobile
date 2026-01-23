@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:sajda_app/app/constants/globals.dart';
 import 'package:sajda_app/bloc_state_manegment/savedSuraBloc/get_sura_name_with_isar_bloc.dart';
+import 'package:sajda_app/services/audio_service/audio_service.dart';
+import 'package:sajda_app/utils/ayah_audio_utils.dart';
 
 class SavedSura extends StatefulWidget {
   const SavedSura({super.key});
@@ -13,6 +16,24 @@ class SavedSura extends StatefulWidget {
 
 class _SavedSuraState extends State<SavedSura> {
   @override
+  final AyahAudioService _audioService = AyahAudioService();
+  int? _playingAyahId;
+  bool _isPlaying = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _audioService.playerStateStream.listen((state) {
+      if (state.processingState == ProcessingState.completed) {
+        setState(() {
+          _isPlaying = false;
+          _playingAyahId = null;
+        });
+      }
+    });
+  }
+
   Widget build(BuildContext context) {
     BlocProvider.of<GetSuraNameWithIsarBloc>(
       context,
@@ -113,12 +134,14 @@ class _SavedSuraState extends State<SavedSura> {
                                 ),
                                 Center(
                                   child: Text(
-                                    state.user![index].suraIndex! <
+                                    state.user![index].suraIndex - 1 <
                                             suralarTxt.length
                                         ? suralarTxt[state
-                                            .user![index]
-                                            .suraIndex!]
+                                                .user![index]
+                                                .suraIndex -
+                                            1]
                                         : "Noma'lum sura",
+
                                     style: GoogleFonts.poppins(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 17,
@@ -132,15 +155,57 @@ class _SavedSuraState extends State<SavedSura> {
                                 ),
                                 Row(
                                   children: [
-                                    Icon(
-                                      Icons.play_arrow_rounded,
-                                      color:
-                                          Theme.of(context).brightness ==
-                                                  Brightness.light
-                                              ? Colors.black
-                                              : Colors.white,
-                                      size: 30,
+                                    IconButton(
+                                      splashRadius: 8,
+                                      onPressed: () async {
+                                        final ayahId = state.user![index].id;
+                                        final url = getAyahAudioUrl(
+                                          sura:
+                                              state.user![index].suraIndex
+                                                  .toString(),
+                                          ayah:
+                                              state.user![index].ayatIndex
+                                                  .toString(),
+                                        );
+
+                                        if (_playingAyahId == ayahId) {
+                                          if (_isPlaying) {
+                                            // pause qilish
+                                            await _audioService.pause();
+                                            setState(() {
+                                              _isPlaying = false;
+                                            });
+                                          } else {
+                                            // boshidan boshlash / play
+                                            await _audioService.play(url);
+                                            setState(() {
+                                              _isPlaying = true;
+                                            });
+                                          }
+                                        } else {
+                                          // boshqa sura o‘qishni boshlash
+                                          await _audioService.play(url);
+                                          setState(() {
+                                            _playingAyahId = ayahId;
+                                            _isPlaying = true;
+                                          });
+                                        }
+                                      },
+                                      icon: Icon(
+                                        (_playingAyahId ==
+                                                    state.user![index].id &&
+                                                _isPlaying)
+                                            ? Icons.pause_rounded
+                                            : Icons.play_arrow_rounded,
+                                        size: 30,
+                                        color:
+                                            Theme.of(context).brightness ==
+                                                    Brightness.light
+                                                ? Colors.black
+                                                : Colors.white,
+                                      ),
                                     ),
+
                                     const SizedBox(width: 15),
                                     IconButton(
                                       splashRadius: 8,
