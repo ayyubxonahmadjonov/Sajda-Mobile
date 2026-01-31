@@ -18,6 +18,11 @@ class RamazonTimeCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  String _formatTime(String time) {
+  if (time.isEmpty) return '';
+  return time.length >= 5 ? time.substring(0, 5) : time;
+}
+
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -53,7 +58,7 @@ class RamazonTimeCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "Saxarlik: $saxarlik",
+                        "Saxarlik: ${_formatTime(saxarlik)}",
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
@@ -78,7 +83,7 @@ class RamazonTimeCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        "Iftorlik: $iftorlik",
+                        "Iftorlik: ${_formatTime(iftorlik)}",
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,

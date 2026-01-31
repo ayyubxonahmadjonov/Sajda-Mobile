@@ -6,6 +6,7 @@ import 'package:sajda_app/app/constants/globals.dart';
 import 'package:sajda_app/bloc_state_manegment/namoz_vaqtlari/namoz_vaqtlari_bloc.dart';
 import 'package:sajda_app/bloc_state_manegment/theme_bloc/theme_mode_bloc.dart';
 import 'package:sajda_app/screens/pages/about.dart';
+import 'package:sajda_app/screens/pages/map_screen.dart';
 import 'package:sajda_app/screens/pages/murojat.dart';
 import 'package:sajda_app/screens/tabs/duolar.dart';
 import 'package:sajda_app/screens/tabs/hadislar.dart';
@@ -14,6 +15,7 @@ import 'package:sajda_app/screens/widgets/ramazon_time.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -21,6 +23,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String locationCity = 'Toshkent';
+
+  String formatTime(String time) {
+    if (time.isEmpty) return '';
+    // HH:mm:ss → HH:mm
+    return time.length >= 5 ? time.substring(0, 5) : time;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,6 +102,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         : const Color.fromARGB(255, 12, 32, 92),
               ),
               onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MosqueMapPage()),
+                );
+              },
+              child: const Text('Masjidlar'),
+            ),
+
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Theme.of(context).brightness == Brightness.light
+                        ? Colors.black87
+                        : const Color.fromARGB(255, 12, 32, 92),
+              ),
+              onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) {
@@ -103,6 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: const Text('Ilova haqida'),
             ),
+
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor:
@@ -124,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               children: [
                 Text(
-                  'Versiya: 1.0.1',
+                  'Versiya: 1.0.2',
                   style: GoogleFonts.poppins(
                     color:
                         Theme.of(context).brightness == Brightness.light
@@ -274,38 +300,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                     times(
                                       "Bomdod",
                                       "bomdod",
-                                      state.time.times?.tongSaharlik
-                                              ?.toString() ??
-                                          "",
+                                      state.time.times.bomdod.toString(),
                                     ),
                                     times(
                                       "Quyosh",
                                       "sun2",
-                                      state.time.times?.quyosh?.toString() ??
-                                          "",
+                                      state.time.times.quyosh.toString(),
                                     ),
                                     times(
                                       "Peshin",
                                       "sun2",
-                                      state.time.times?.peshin?.toString() ??
-                                          "",
+                                      state.time.times.peshin.toString(),
                                     ),
                                     times(
                                       "Asr",
                                       "asr",
-                                      state.time.times?.asr?.toString() ?? "",
+                                      state.time.times.asr.toString(),
                                     ),
                                     times(
                                       "Shom",
                                       "shom",
-                                      state.time.times?.shomIftor?.toString() ??
-                                          "",
+                                      state.time.times.shom.toString(),
                                     ),
                                     times(
                                       "Xufton",
                                       "hufton",
-                                      state.time.times?.hufton?.toString() ??
-                                          "",
+                                      state.time.times.xufton.toString(),
                                     ),
                                   ],
                                 )
@@ -398,12 +418,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 txt: '',
                                 imgSaxarlik: 'bomdod',
                                 imgIftorlik: 'shom',
-                                saxarlik:
-                                    state.time.times?.tongSaharlik.toString() ??
-                                    "",
-                                iftorlik:
-                                    state.time.times?.shomIftor.toString() ??
-                                    "",
+                                saxarlik: state.time.times.bomdod.toString(),
+                                iftorlik: state.time.times.shom.toString(),
                               );
                             } else {
                               return const Center(child: Text(''));
@@ -475,7 +491,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(height: 30, child: Image.asset('assets/images/$img.png')),
           const SizedBox(width: 10),
           Text(
-            '$txt: $time',
+            '$txt: ${formatTime(time)}',
             style: GoogleFonts.poppins(
               fontSize: 20,
               fontWeight: FontWeight.w400,
@@ -544,25 +560,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   showAlertDialog(BuildContext context) {
     final Map<String, String> cities = {
-      'Toshkent': 'Tashkent',
-      'Andijon': 'Andijan',
-      'Fargʻona': 'Fergana',
+      'Toshkent ': 'Toshkent',
+      'Andijon': 'Andijon',
+      'Buxoro': 'Buxoro',
+      'Fargʻona': 'Farg\'ona',
+      'Jizzax': 'Jizzax',
+      'Xorazm': 'Xiva',
       'Namangan': 'Namangan',
-      'Samarqand': 'Samarkand',
-      'Nukus': 'Nukus',
-      'Buxoro': 'Bukhara',
-      'Qarshi': 'Qarshi',
-      'Navoiy': 'Navoi',
-      'Xiva': 'Khiva',
-      "Qoʻqon": 'Kokand',
-      'Margʻilon': 'Margilan',
-      'Termiz': 'Termez',
-      'Urganch': 'Urgench',
-      'Angren': 'Angren',
-      'Chirchiq': 'Chirchiq',
-      'Shahrisabz': 'Shakhrisabz',
-      'Jizzax': 'Jizzakh',
-      'Guliston': 'Gulistan',
+      'Navoiy': 'Navoiy',
+      'Qashqadaryo': 'Qashqadaryo',
+      'Samarqand': 'Samarqand',
+      'Sirdaryo': 'Sirdaryo',
+      'Surxandaryo': 'Surxandaryo',
     };
 
     showDialog(

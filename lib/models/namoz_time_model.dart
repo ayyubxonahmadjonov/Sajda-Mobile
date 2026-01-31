@@ -1,25 +1,28 @@
 class NamozTime {
-  String? region; // user tanlagan shahar
-  String? date;   // gregorian readable date
-  String? weekday; // haftaning kuni (inglizcha)
-  Times? times;
+  final String region; // Toshkent
+  final String date;   // 2026-01-23
+  final Times times;
 
-  NamozTime({this.region, this.date, this.weekday, this.times});
+  NamozTime({
+    required this.region,
+    required this.date,
+    required this.times,
+  });
 
-  factory NamozTime.fromJson(Map<String, dynamic> json, {String? regionName}) {
-    final data = json['data'];
-    final timings = data['timings'];
+  factory NamozTime.fromJson(
+    Map<String, dynamic> json, {
+    required String regionName,
+    required String date,
+  }) {
+    // API structure:
+    // { isSuccess, statusCode, response: { bomdod, quyosh, ... } }
 
-    // gregorian date va weekday
-    final dateInfo = data['date']['gregorian'];
-    final readableDate = data['date']['readable'];
-    final weekday = dateInfo['weekday']['en'];
+    final response = json['response'];
 
     return NamozTime(
       region: regionName,
-      date: readableDate,
-      weekday: weekday,
-      times: Times.fromJson(timings),
+      date: date,
+      times: Times.fromJson(response),
     );
   }
 
@@ -27,48 +30,46 @@ class NamozTime {
     return {
       'region': region,
       'date': date,
-      'weekday': weekday,
-      'times': times?.toJson(),
+      'times': times.toJson(),
     };
   }
 }
-
 class Times {
-  String? tongSaharlik; // Fajr
-  String? quyosh;       // Sunrise
-  String? peshin;       // Dhuhr
-  String? asr;          // Asr
-  String? shomIftor;    // Maghrib
-  String? hufton;       // Isha
+  final String bomdod;
+  final String quyosh;
+  final String peshin;
+  final String asr;
+  final String shom;
+  final String xufton;
 
   Times({
-    this.tongSaharlik,
-    this.quyosh,
-    this.peshin,
-    this.asr,
-    this.shomIftor,
-    this.hufton,
+    required this.bomdod,
+    required this.quyosh,
+    required this.peshin,
+    required this.asr,
+    required this.shom,
+    required this.xufton,
   });
 
   factory Times.fromJson(Map<String, dynamic> json) {
     return Times(
-      tongSaharlik: json['Fajr'],
-      quyosh: json['Sunrise'],
-      peshin: json['Dhuhr'],
-      asr: json['Asr'],
-      shomIftor: json['Maghrib'],
-      hufton: json['Isha'],
+      bomdod: json['bomdod'],
+      quyosh: json['quyosh'],
+      peshin: json['peshin'],
+      asr: json['asr'],
+      shom: json['shom'],
+      xufton: json['xufton'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'tong_saharlik': tongSaharlik,
+      'bomdod': bomdod,
       'quyosh': quyosh,
       'peshin': peshin,
       'asr': asr,
-      'shom_iftor': shomIftor,
-      'hufton': hufton,
+      'shom': shom,
+      'xufton': xufton,
     };
   }
 }

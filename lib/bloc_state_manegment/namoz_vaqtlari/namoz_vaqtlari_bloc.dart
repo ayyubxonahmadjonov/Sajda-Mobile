@@ -17,22 +17,36 @@ class NamozVaqtlariBloc
     Emitter<NamozVaqtlariState> emit,
   ) async {
     emit(ProccesNamozVaqtlariState());
-   final date = DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+    final date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
     try {
       final dio = Dio();
       final response = await dio.get(
-        'https://api.aladhan.com/v1/timingsByCity/$date?city=${event.location}&country=Uzbekistan&method=2',
+        'https://namoz-vaqtlari.more-info.uz:444/api/GetDailyPrayTimes/${event.location}/$date',
       );
-        if (response.statusCode == 200) {
-  final data = response.data; 
-  final NamozTime time = NamozTime.fromJson(data, regionName: event.location);
 
-  emit(SuccesNamozVaqtlariState(time));
-      
+      print('🔹 STATUS: ${response.statusCode}');
+      print('🔹 RAW DATA: ${response.data}');
+
+      if (response.statusCode == 200 &&
+          response.data != null &&
+          response.data['response'] != null) {
+        
+        final NamozTime time = NamozTime.fromJson(
+          response.data,
+          regionName: event.location,
+          date: date,
+        );
+
+        print('✅ PARSED MODEL: ${time.toJson()}');
+
+        emit(SuccesNamozVaqtlariState(time));
       } else {
-        emit(FailureNamozVaqtlariState('Server xatosi'));
+        emit(FailureNamozVaqtlariState('Maʼlumot topilmadi'));
       }
     } catch (e) {
+      print('❌ ERROR: $e');
       emit(FailureNamozVaqtlariState('Server xatosi'));
     }
   }

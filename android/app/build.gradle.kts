@@ -15,7 +15,8 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "uz.ayyubxon.sajda_app"
     compileSdk = 36
-    ndkVersion = "26.1.10909125"
+    ndkVersion = "27.0.12077973"
+    buildToolsVersion = "34.0.0"
 
     packaging {
         jniLibs {
@@ -37,10 +38,10 @@ android {
         applicationId = "uz.ayyubxon.sajda_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = 26
         targetSdk = 35
-        versionCode = 14
-        versionName = "1.5"
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
     }
 
     signingConfigs {

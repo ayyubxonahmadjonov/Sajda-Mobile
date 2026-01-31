@@ -85,7 +85,7 @@ class CommentsPage extends StatelessWidget {
 
                 const SizedBox(height: 8),
                 Text(
-                  'Versiya: 1.0.1',
+                  'Versiya: 1.0.3',
                   textAlign: TextAlign.end,
                   style: GoogleFonts.poppins(
                     color:
