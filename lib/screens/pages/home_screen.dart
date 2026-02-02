@@ -94,72 +94,91 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Theme.of(context).brightness == Brightness.light
-                        ? Colors.black87
-                        : const Color.fromARGB(255, 12, 32, 92),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10,),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.black87
+                          : const Color.fromARGB(255, 12, 32, 92),
+                ),
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Tez orada...'),
+                    ),
+                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => MosqueMapPage()),
+                  // );
+                },
+                child: const Text('Masjidlar'),
               ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MosqueMapPage()),
-                );
-              },
-              child: const Text('Masjidlar'),
             ),
 
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Theme.of(context).brightness == Brightness.light
-                        ? Colors.black87
-                        : const Color.fromARGB(255, 12, 32, 92),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10,),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.black87
+                          : const Color.fromARGB(255, 12, 32, 92),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const AboutPage();
+                      },
+                    ),
+                  );
+                },
+                child: const Text('Ilova haqida'),
               ),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const AboutPage();
-                    },
-                  ),
-                );
-              },
-              child: const Text('Ilova haqida'),
             ),
 
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Theme.of(context).brightness == Brightness.light
-                        ? Colors.black
-                        : const Color.fromARGB(255, 12, 32, 92),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10,),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : const Color.fromARGB(255, 12, 32, 92),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const CommentsPage();
+                      },
+                    ),
+                  );
+                },
+                child: const Text('Murojat uchun'),
               ),
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const CommentsPage();
-                    },
-                  ),
-                );
-              },
-              child: const Text('Murojat uchun'),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  'Versiya: 1.0.2',
-                  style: GoogleFonts.poppins(
-                    color:
-                        Theme.of(context).brightness == Brightness.light
-                            ? Colors.black
-                            : Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                  child: Text(
+                    'Versiya: 1.0.3',
+                    style: GoogleFonts.poppins(
+                      color:
+                          Theme.of(context).brightness == Brightness.light
+                              ? Colors.black
+                              : Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
+                
               ],
             ),
             Spacer(),
