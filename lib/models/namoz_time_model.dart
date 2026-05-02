@@ -1,6 +1,6 @@
 class NamozTime {
-  final String region; // Toshkent
-  final String date;   // 2026-01-23
+  final String region;
+  final String date;
   final Times times;
 
   NamozTime({
@@ -9,31 +9,29 @@ class NamozTime {
     required this.times,
   });
 
-  factory NamozTime.fromJson(
+  // AlAdhan API response parser
+  factory NamozTime.fromAlAdhan(
     Map<String, dynamic> json, {
     required String regionName,
-    required String date,
   }) {
-    // API structure:
-    // { isSuccess, statusCode, response: { bomdod, quyosh, ... } }
-
-    final response = json['response'];
-
+    final timings = json['data']['timings'] as Map<String, dynamic>;
+    final now = DateTime.now();
+    final date =
+        '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
     return NamozTime(
       region: regionName,
       date: date,
-      times: Times.fromJson(response),
+      times: Times.fromAlAdhan(timings),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'region': region,
-      'date': date,
-      'times': times.toJson(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    'region': region,
+    'date': date,
+    'times': times.toJson(),
+  };
 }
+
 class Times {
   final String bomdod;
   final String quyosh;
@@ -51,25 +49,32 @@ class Times {
     required this.xufton,
   });
 
-  factory Times.fromJson(Map<String, dynamic> json) {
+  // AlAdhan: Fajr→Bomdod, Sunrise→Quyosh, Dhuhr→Peshin,
+  //          Asr→Asr, Maghrib→Shom, Isha→Xufton
+  factory Times.fromAlAdhan(Map<String, dynamic> t) {
     return Times(
-      bomdod: json['bomdod'],
-      quyosh: json['quyosh'],
-      peshin: json['peshin'],
-      asr: json['asr'],
-      shom: json['shom'],
-      xufton: json['xufton'],
+      bomdod: _clean(t['Fajr'] ?? ''),
+      quyosh: _clean(t['Sunrise'] ?? ''),
+      peshin: _clean(t['Dhuhr'] ?? ''),
+      asr:    _clean(t['Asr'] ?? ''),
+      shom:   _clean(t['Maghrib'] ?? ''),
+      xufton: _clean(t['Isha'] ?? ''),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'bomdod': bomdod,
-      'quyosh': quyosh,
-      'peshin': peshin,
-      'asr': asr,
-      'shom': shom,
-      'xufton': xufton,
-    };
+  // "04:35 (UTC+5)" → "04:35"
+  static String _clean(String raw) {
+    final trimmed = raw.trim();
+    final spaceIdx = trimmed.indexOf(' ');
+    return spaceIdx == -1 ? trimmed : trimmed.substring(0, spaceIdx);
   }
+
+  Map<String, dynamic> toJson() => {
+    'bomdod': bomdod,
+    'quyosh': quyosh,
+    'peshin': peshin,
+    'asr': asr,
+    'shom': shom,
+    'xufton': xufton,
+  };
 }
