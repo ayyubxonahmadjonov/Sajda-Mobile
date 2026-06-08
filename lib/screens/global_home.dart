@@ -5,7 +5,7 @@ import 'package:sajda_app/screens/pages/saved_sura.dart';
 import 'package:sajda_app/screens/pages/tasbeh.dart';
 import 'package:sajda_app/screens/qibla.dart';
 import 'pages/home_screen.dart';
-import 'pages/tahorat_oliw.dart';
+import 'pages/amallar/amallar_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
   static const List<Widget> _pages = [
     HomeScreen(),
     QiblahScreen(),
-    Ablution(),
+    AmallarScreen(),
     TasbehScreen(),
     SavedSura(),
   ];
@@ -28,7 +28,7 @@ class _HomeState extends State<Home> {
   final _navItems = const [
     _NavItem(icon: 'assets/images/surakitob.png', label: "Qur'on"),
     _NavItem(icon: 'assets/images/compass.png', label: 'Qibla'),
-    _NavItem(icon: 'assets/images/water.png', label: 'Tahorat'),
+    _NavItem(icon: 'assets/images/water.png', label: 'Amallar'),
     _NavItem(icon: 'assets/images/tasbih.png', label: 'Tasbeh'),
     _NavItem(icon: 'assets/images/bookmark.png', label: 'Saqlangan'),
   ];

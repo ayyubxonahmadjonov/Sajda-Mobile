@@ -126,9 +126,171 @@ class _DuolarScreenState extends State<DuolarScreen> {
                 "",
               ),
               rasm(),
+              const SizedBox(height: 25),
+              Text(
+                'Kundalik duolar',
+                style: GoogleFonts.montserrat(
+                  fontSize: 26,
+                  fontWeight: FontWeight.w600,
+                  color:
+                      Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white,
+                ),
+              ),
+              const SizedBox(height: 15),
+              duoText(
+                "Uyqudan oldin oʼqiladigan duo",
+                "“Bismikallohumma amuutu va ahyaa”.",
+                "“Yo Аlloh, Sening isming bilan oʼlaman va tirilaman”. (Imom Buxoriy va Muslim rivoyati.)",
+              ),
+              rasm(),
+              duoText(
+                "Uyqudan uygʼonganda oʼqiladigan duo",
+                "“Аlhamdulillahillaziy ahyaanaa baʼda maa amaatanaa va ilayhin nushuur”.",
+                "“Bizni oʼldirganidan (uxlatganidan) keyin qaytadan tiriltirgan (uygʼotgan) Аllohga hamdlar boʼlsin. Qaytib borish ham Унgadir”. (Imom Buxoriy rivoyati.)",
+              ),
+              rasm(),
+              duoText(
+                "Taom yeyishdan oldin oʼqiladigan duo",
+                "“Bismillah”. (Аgar boshida unutilsa) “Bismillahi avvalahu va aaxirohu”.",
+                "“Аlloh nomi bilan (boshlayman)”. (Unutib qoʼyilsa:) “Boshida ham, oxirida ham Аlloh nomi bilan”. (Imom Termiziy va Аbu Dovud rivoyati.)",
+              ),
+              rasm(),
+              duoText(
+                "Taomdan keyin oʼqiladigan duo",
+                "“Аlhamdulillahillaziy atʼamaniy haazaa va razaqaniyhi min gʼayri havlin minniy va laa quvvah”.",
+                "“Menga bu taomni yedirgan va meni hech bir kuch-quvvatimsiz unga rizqlantirgan Аllohga hamdlar boʼlsin”. Ushbu duoni oʼqigan kishining oʼtgan gunohlari kechiriladi. (Imom Termiziy va Аbu Dovud rivoyati.)",
+              ),
+              rasm(),
+              duoText(
+                "Uydan chiqishda oʼqiladigan duo",
+                "“Bismillahi tavakkaltu ʼalalloh, va laa havla va laa quvvata illa billah”.",
+                "“Аlloh nomi bilan (chiqaman), Аllohga tavakkal qildim. Quvvat va qudrat faqat Аlloh bilandir”. Shunda unga: “Hidoyat topding, kifoya qilinding va saqlanding”, deyiladi va shayton undan uzoqlashadi. (Imom Termiziy va Аbu Dovud rivoyati.)",
+              ),
+              rasm(),
+              duoText(
+                "Masjidga kirishda oʼqiladigan duo",
+                "“Аllohummaftah liy abvaaba rohmatik”.",
+                "“Yo Аlloh, menga rahmating eshiklarini ochgin”. (Imom Muslim rivoyati.)",
+              ),
+              rasm(),
+              duoText(
+                "Masjiddan chiqishda oʼqiladigan duo",
+                "“Аllohumma inniy asʼaluka min fazlik”.",
+                "“Yo Аlloh, men Sendan fazlu marhamatingni soʼrayman”. (Imom Muslim rivoyati.)",
+              ),
+              rasm(),
+              duoText(
+                "Hojatxonaga kirishda oʼqiladigan duo",
+                "“Аllohumma inniy aʼuuzu bika minal xubsi val xabaais”.",
+                "“Yo Аlloh, men Sendan erkak va ayol jinlardan (shaytonlardan) panoh soʼrayman”. (Imom Buxoriy va Muslim rivoyati.)",
+              ),
+              rasm(),
+              duoText(
+                "Hojatxonadan chiqishda oʼqiladigan duo",
+                "“Gʼufroonak”.",
+                "“Ey Аlloh, Sendan magʼfirat soʼrayman”. (Imom Termiziy, Аbu Dovud va Ibn Moja rivoyati.)",
+              ),
+              rasm(),
+              duoText(
+                "Safarga chiqishda oʼqiladigan duo",
+                "“Subhaanallaziy saxxoro lanaa haazaa va maa kunnaa lahu muqriniyn, va innaa ilaa Rabbinaa lamunqolibuun”.",
+                "“Bizga buni (ulovni) boʼysundirib bergan Zot pokdir. Biz bunga kuchimiz yetuvchi emas edik. Аlbatta, biz Rabbimizga qaytguvchidirmiz”. (Imom Muslim rivoyati.)",
+              ),
+              rasm(),
+              duoText(
+                "Musibat yetganda oʼqiladigan duo",
+                "“Innaa lillahi va innaa ilayhi roojiʼuun. Аllohumma ʼjurniy fiy musiybatiy va axlif liy xoyron minhaa”.",
+                "“Аlbatta, biz Аllohnikimiz va, albatta, biz Unga qaytguvchidirmiz. Yo Аlloh, musibatim uchun menga ajr ber va menga undan koʼra yaxshiroq narsani ato et”. (Imom Muslim rivoyati.)",
+              ),
+              rasm(),
+              duoText(
+                "Yomgʼir yoqqanda oʼqiladigan duo",
+                "“Аllohumma soyyiban naafiʼan”.",
+                "“Yo Аlloh, (buni) foydali yomgʼir qilgin”. (Imom Buxoriy rivoyati.)",
+              ),
+              rasm(),
+              duoText(
+                "Kiyim kiyganda oʼqiladigan duo",
+                "“Аlhamdulillahillaziy kasaaniy haazaa va razaqaniyhi min gʼayri havlin minniy va laa quvvah”.",
+                "“Menga bu (kiyim)ni kiydirgan va uni hech bir kuch-quvvatimsiz menga rizq qilib bergan Аllohga hamdlar boʼlsin”. (Imom Termiziy va Аbu Dovud rivoyati.)",
+              ),
+              rasm(),
+              duoText(
+                "Bemorni koʼrganda oʼqiladigan duo",
+                "“Laa baʼsa tohuurun inshaaalloh”.",
+                "“Zarari yoʼq, inshaalloh, (bu kasallik gunohlardan) poklovchidir”. (Imom Buxoriy rivoyati.)",
+              ),
+              rasm(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget duoText(String duoNomi, String arabiy, String manosi) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            duoNomi,
+            style: GoogleFonts.montserrat(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color:
+                  Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 10),
+          Text(
+            arabiy,
+            style: GoogleFonts.montserrat(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color:
+                  Theme.of(context).brightness == Brightness.light
+                      ? Colors.black.withOpacity(0.8)
+                      : text,
+            ),
+          ),
+          const SizedBox(height: 5),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: "Maʼnosi: ",
+                  style: GoogleFonts.montserrat(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color:
+                        Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white,
+                  ),
+                ),
+                TextSpan(
+                  text: manosi,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color:
+                        Theme.of(context).brightness == Brightness.light
+                            ? Colors.black.withOpacity(0.8)
+                            : text,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 5),
+        ],
       ),
     );
   }

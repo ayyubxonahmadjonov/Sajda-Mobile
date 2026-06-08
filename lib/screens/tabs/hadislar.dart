@@ -515,7 +515,219 @@ class HadislarScreen extends StatelessWidget {
               ),
             ),
           ),
+          rasm('32', context),
+          hadisMatn(
+            "Abu Molik al-Horis ibn Osim al-Ash’ariydan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Poklik imonning yarmidir. «Alhamdulillah» mezonni to‘ldiradi. «Subhanalloh» va «Alhamdulillah» osmonlar va yer orasini to‘ldiradi. Namoz nurdir. Sadaqa daliddir (hujjatdir). Sabr ziyodir. Qur’on sen uchun yo hujjat, yo sening zararingga (dalil)dir. Har bir inson erta tongda (uydan) chiqib, o‘z nafsini sotadi: yo uni ozod qiladi, yo halok qiladi», dedilar. Imom Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('33', context),
+          hadisMatn(
+            "Abu Zarrdan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallamning sahobalaridan ba’zilari: «Ey Rasululloh, boylar ko‘p savobni olib ketishdi. Biz kabi ular ham namoz o‘qiydilar, ro‘za tutadilar, ortiqcha mol-davlatlaridan sadaqa qiladilar», deyishdi. Shunda u zot: «Alloh sizlarga ham sadaqa qiladigan narsa berib qo‘ymadimi? Albatta, har bir tasbeh (Subhanalloh deyish) sadaqadir, har bir takbir (Allohu akbar deyish) sadaqadir, har bir tahmid (Alhamdulillah deyish) sadaqadir, har bir tahlil (La ilaha illalloh deyish) sadaqadir. Yaxshilikka buyurish sadaqadir, yomonlikdan qaytarish sadaqadir...», dedilar. Imom Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('34', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Insonning har bir bo‘g‘ini uchun kun chiqqan har bir kunda sadaqa (qilish lozim) bo‘ladi. Ikki kishi orasini adolat bilan kelishtirib qo‘yishing sadaqadir. Kishiga ulovida yordam berib, uni mindirib qo‘yishing yoki yukini ortib berishing sadaqadir. Yaxshi so‘z sadaqadir. Namozga boradigan har bir qadaming sadaqadir. Yo‘ldan ozorni olib tashlashing sadaqadir», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('35', context),
+          hadisMatn(
+            "Abu Sa’id al-Xudriydan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Sizlardan kim bir yomonlikni (munkarni) ko‘rsa, uni qo‘li bilan o‘zgartirsin. Agar (bunga) qodir bo‘lmasa, tili bilan (o‘zgartirsin). Agar (bunga ham) qodir bo‘lmasa, qalbi bilan (yomon ko‘rsin). Bu (oxirgisi) imonning eng zaifidir», dedilar. Imom Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('36', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Bir-biringizga hasad qilmanglar, narx oshirib (aldab) sotmanglar, bir-biringizga nafrat qilmanglar, bir-biringizdan yuz o‘girmanglar, biringiz birovning savdosi ustiga savdo qilmanglar. Ey Allohning bandalari, birodar bo‘linglar! Musulmon musulmonning birodaridir: unga zulm qilmaydi, uni xor qilmaydi, uni yolg‘onchiga chiqarmaydi va uni mensimaslik qilmaydi. Taqvo mana shu yerda», deb ko‘kraklariga uch marta ishora qildilar. «Kishiga yomonlik sifatida musulmon birodarini mensimasligi yetarli. Har bir musulmonning musulmonga qoni, moli va obro‘si haromdir», dedilar. Imom Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('37', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Kimki bir mo‘mindan dunyo g‘amlaridan birini ko‘tarsa (yengillashtirsa), Alloh undan Qiyomat kuni g‘amlaridan birini ko‘taradi. Kimki qiyinchilikdagi kishiga yengillik bersa, Alloh unga dunyo va oxiratda yengillik beradi. Kimki bir musulmonning aybini berkitsa, Alloh dunyo va oxiratda uning aybini berkitadi. Banda o‘z birodariga yordam berib turar ekan, Alloh ham bandaga yordam berib turadi», dedilar. Imom Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('38', context),
+          hadisMatn(
+            "Ibn Abbosdan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam Rabbidan rivoyat qilib: «Albatta Alloh yaxshiliklaru yomonliklarni yozib qo‘ydi. So‘ngra ularni bayon qildi: Kimki bir yaxshilikni qilishga niyat qilib, uni amalga oshirmasa, Alloh uni O‘z huzurida bir to‘liq yaxshilik qilib yozadi. Agar niyat qilib, uni amalga oshirsa, Alloh uni O‘z huzurida o‘n yaxshilikdan to yetti yuz barobargacha, balki undan-da ko‘proq qilib yozadi. Agar bir yomonlikni qilishga niyat qilib, uni amalga oshirmasa, Alloh uni O‘z huzurida bir to‘liq yaxshilik qilib yozadi. Agar niyat qilib, uni amalga oshirsa, Alloh uni bir yomonlik qilib yozadi», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('39', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Alloh taolo: «Kimki Mening do‘stimga (valiyimga) dushmanlik qilsa, Men unga urush e’lon qilaman. Bandam Menga o‘ziga farz qilgan narsalarimdan ko‘ra suyukliroq biror narsa bilan yaqinlashmadi. Bandam Menga nafl (ibodatlar) bilan yaqinlashib boraveradi, hatto Men uni sevib qolaman. Bas, qachonki uni sevsam, Men uning eshitadigan qulog‘i, ko‘radigan ko‘zi, ushlaydigan qo‘li va yuradigan oyog‘i bo‘lib qolaman. Agar Mendan so‘rasa, albatta beraman. Agar Mendan panoh tilasa, albatta panoh beraman», dedi», dedilar. Imom Buxoriy  rivoyatlari.",
+            context,
+          ),
+          rasm('40', context),
+          hadisMatn(
+            "Ibn Abbosdan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Albatta Alloh mening ummatimdan xato (bilan qilingan), unutilgan va majbur qilingan narsalarini kechirdi (afv etdi)», dedilar. Ibn Moja va Bayhaqiy  rivoyatlari.",
+            context,
+          ),
+          rasm('41', context),
+          hadisMatn(
+            "Ibn Umardan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam yelkamdan ushlab: «Dunyoda go‘yo bir g‘arib (musofir) yoki yo‘lovchidek bo‘l», dedilar. Ibn Umar (r.a.): «Agar tunga yetsang, tongni kutma. Agar tongga yetsang, kechni kutma. Sog‘lig‘ingdan kasalliging uchun, hayotingdan o‘liming uchun (foydalanib qol)», der edilar. Imom Buxoriy  rivoyatlari.",
+            context,
+          ),
+          rasm('42', context),
+          hadisMatn(
+            "Abdulloh ibn Amr ibn Os’dan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Sizlardan biringiz, to nafsi (xohish-istagi) men olib kelgan narsaga (Islomga) tobe’ bo‘lmaguncha, (komil) mo‘min bo‘la olmaydi», dedilar. Bu sahih hadisdir.",
+            context,
+          ),
+          rasm('43', context),
+          hadisMatn(
+            "Anas ibn Molikdan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam Alloh taolodan rivoyat qilib: «Ey Odam farzandi, sen Menga duo qilib, Mendan umidvor bo‘lib turar ekansan, sendan sodir bo‘lgan (gunoh)larga qaramay, Men seni kechiraman. Ey Odam farzandi, agar sening gunohlaring osmonga yetadigan darajada bo‘lsa-yu, so‘ngra Mendan mag‘firat so‘rasang, seni kechiraman. Ey Odam farzandi, agar sen Menga yer to‘la xato bilan kelsang-u, so‘ngra Menga hech narsani sherik qilmagan holda uchrashsang, albatta Men senga yer to‘la mag‘firat bilan kelaman», dedilar. Imom Termiziy  rivoyatlari.",
+            context,
+          ),
+          rasm('44', context),
+          hadisMatn(
+            "Nu’mon ibn Bashirdan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Duo — ibodatning aynan o‘zidir», dedilar. So‘ngra: «Rabbingiz: «Menga duo qilinglar, Men ijobat qilaman», dedi» (G‘ofir surasi, 60-oyat) oyatini o‘qidilar. Imom Termiziy  rivoyatlari.",
+            context,
+          ),
+          rasm('45', context),
+          hadisMatn(
+            "Abu Zarrdan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Birodaringga tabassum qilishing — sadaqadir. Yaxshilikka buyurib, yomonlikdan qaytarishing — sadaqadir. Yo‘ldan adashgan kishiga yo‘l ko‘rsatishing — sadaqadir. Yo‘ldan tosh, tikan va suyakni olib tashlashing — sadaqadir», dedilar. Imom Termiziy  rivoyatlari.",
+            context,
+          ),
+          rasm('46', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Pahlavon — kurashda yenguvchi (kishi) emas. Balki haqiqiy pahlavon — g‘azab vaqtida o‘zini tuta oladigan kishidir», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('47', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Albatta Alloh sizlarning suratlaringizga va mol-dunyolaringizga qaramaydi. Balki qalblaringizga va amallaringizga qaraydi», dedilar. Imom Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('48', context),
+          hadisMatn(
+            "Abu Mas’ud al-Ansoriydan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Kimki bir yaxshilikka boshlovchi (dalolat qiluvchi) bo‘lsa, unga o‘sha yaxshilikni qilgan kishining ajriday ajr beriladi», dedilar. Imom Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('49', context),
+          hadisMatn(
+            "Oishadan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Sizlarning eng yaxshilaringiz — ahli oilasiga eng yaxshi bo‘lganingizdir. Men esa oilamga sizlarning eng yaxshingizman», dedilar. Imom Termiziy va Ibn Moja  rivoyatlari.",
+            context,
+          ),
+          rasm('50', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Bir kishi: «Ey Rasululloh, men chiroyli muomalaga eng haqli kishi kim?» dedi. U zot: «Onang», dedilar. «So‘ngra kim?» dedi. «Onang», dedilar. «So‘ngra kim?» dedi. «Onang», dedilar. «So‘ngra kim?» dedi. «So‘ngra otang», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('51', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Kimki odamlarga shukr (minnatdorchilik) bildirmasa, Allohga ham shukr qilmaydi», dedilar. Imom Termiziy va Abu Dovud  rivoyatlari.",
+            context,
+          ),
+          rasm('52', context),
+          hadisMatn(
+            "Ibn Umardan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam hayo haqida (uni kamchilik deb) gapirayotgan bir ansoriy yonidan o‘tib: «Uni o‘z holiga qo‘y, chunki hayo imondandir», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('53', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Tilda yengil, mezonda og‘ir, Rahmonga suyukli bo‘lgan ikki kalima bor: «Subhanallohi va bihamdih, subhanallohil aziym»», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('54', context),
+          hadisMatn(
+            "Oishadan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Allohga eng suyukli amal — oz bo‘lsa-da, doimiy (bardavom) bo‘lganidir», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('55', context),
+          hadisMatn(
+            "Anasdan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Yengillashtiringlar, qiyinlashtirmanglar. Xushxabar beringlar, nafratlantirmanglar», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('56', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Dunyo mo‘minning zindoni, kofirning jannatidir», dedilar. Imom Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('57', context),
+          hadisMatn(
+            "Ibn Abbosdan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam bir kishiga nasihat qilib: «Beshta narsadan oldin beshtasini g‘animat bil: qariligingdan oldin yoshligingni, kasalligingdan oldin sog‘ligingni, kambag‘alligingdan oldin boyligingni, bandligingdan oldin bo‘sh vaqtingni va o‘limingdan oldin hayotingni», dedilar. Hokim  rivoyatlari.",
+            context,
+          ),
+          rasm('58', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Kimki ilm izlab bir yo‘lga kirsa, Alloh unga jannatga boradigan yo‘lni oson qiladi», dedilar. Imom Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('59', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Mo‘minlarning imoni eng komili — axloqi eng go‘zal bo‘lganidir», dedilar. Imom Termiziy  rivoyatlari.",
+            context,
+          ),
+          rasm('60', context),
+          hadisMatn(
+            "Jarir ibn Abdullohdan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Kimki odamlarga rahm qilmasa, Alloh ham unga rahm qilmaydi», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('61', context),
+          hadisMatn(
+            "Hakim ibn Hizomdan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Yuqori qo‘l (beruvchi qo‘l) quyi qo‘ldan (oluvchi qo‘ldan) yaxshiroqdir. (Nafaqada) avval o‘z qaramog‘ingdagilardan boshla. Sadaqaning yaxshisi — boylik ortidan (qilingani)dir. Kimki iffatli bo‘lishni istasa, Alloh uni iffatli qiladi. Kimki o‘zini behojat tutsa, Alloh uni behojat qiladi», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('62', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Sadaqa moldan (hech narsa) kamaytirmaydi. Banda kechirimli bo‘lgani sayin, Alloh uni aziz qiladi. Kimki Alloh uchun tavoze’ (kamtarlik) qilsa, Alloh uni ko‘taradi», dedilar. Imom Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('63', context),
+          hadisMatn(
+            "Abu Dardodan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Musulmon kishining o‘z birodari uchun u yo‘qligida qilgan duosi ijobat bo‘ladi. Uning boshida bir farishta turadi. U birodariga yaxshilik tilab duo qilsa, farishta: «Omin, senga ham shunday bo‘lsin», deydi», dedilar. Imom Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('64', context),
+          hadisMatn(
+            "Oishadan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Kimki Allohga uchrashishni (muloqotni) sevsa, Alloh ham unga uchrashishni sevadi. Kimki Allohga uchrashishni yomon ko‘rsa, Alloh ham unga uchrashishni yomon ko‘radi», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('65', context),
+          hadisMatn(
+            "Anasdan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Sizlardan birortangiz o‘ziga yetgan zarar tufayli o‘limni tilamasin. Agar shunday qilishi shart bo‘lib qolsa: «Yo Alloh, modomiki hayot men uchun yaxshi ekan, meni tirik qoldir. Modomiki o‘lim men uchun yaxshi ekan, meni vafot ettir», desin», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('66', context),
+          hadisMatn(
+            "Anasdan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Jannat yoqimsiz (mashaqqatli) narsalar bilan o‘ralgan. Do‘zax esa nafs istaklari bilan o‘ralgan», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('67', context),
+          hadisMatn(
+            "Abu Hurayradan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Boylik — mol-dunyoning ko‘pligi bilan emas. Balki haqiqiy boylik — qalb (ko‘ngil) boyligidir», dedilar. Imom Buxoriy va Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('68', context),
+          hadisMatn(
+            "Suhayb (r.a.)dan  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Mo‘minning ishi qiziq! Uning har bir ishi o‘zi uchun yaxshidir. Bu faqat mo‘minga xosdir: agar unga shodlik yetsa, shukr qiladi — bu u uchun yaxshi bo‘ladi. Agar unga ziyon yetsa, sabr qiladi — bu ham u uchun yaxshi bo‘ladi», dedilar. Imom Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('69', context),
+          hadisMatn(
+            "Ibn Mas’uddan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Kimning qalbida zarra miqdorida kibr bo‘lsa, jannatga kirmaydi», dedilar. Bir kishi: «Inson o‘z kiyimi va poyabzali chiroyli bo‘lishini yaxshi ko‘radi-ku?» dedi. Shunda u zot: «Albatta Alloh go‘zaldir, go‘zallikni sevadi. Kibr — haqni rad etish va odamlarni mensimaslikdir», dedilar. Imom Muslim  rivoyatlari.",
+            context,
+          ),
+          rasm('70', context),
+          hadisMatn(
+            "Jobirdan (r.a.)  rivoyat qilinadi. Rasululloh sollallohu alayhi vasallam: «Zikrning eng afzali — «La ilaha illalloh», duoning eng afzali — «Alhamdulillah»dir», dedilar. Imom Termiziy  rivoyatlari.",
+            context,
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget hadisMatn(String matn, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Text(
+        matn,
+        style: GoogleFonts.poppins(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          color:
+              Theme.of(context).brightness == Brightness.light
+                  ? Colors.black.withOpacity(0.8)
+                  : text,
+        ),
       ),
     );
   }

@@ -14,8 +14,28 @@ class _AblutionState extends State<Ablution> {
   PageController pageController = PageController();
   @override
   Widget build(BuildContext context) {
+    final onBg = Theme.of(context).brightness == Brightness.light
+        ? Colors.black
+        : Colors.white;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new, color: onBg, size: 20),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          'Tahorat olish',
+          style: GoogleFonts.poppins(
+            color: onBg,
+            fontWeight: FontWeight.w600,
+            fontSize: 18,
+          ),
+        ),
+      ),
       body: SafeArea(
+        top: false,
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [

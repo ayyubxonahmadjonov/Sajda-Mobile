@@ -7,16 +7,20 @@ import 'bloc_state_manegment/savedSuraBloc/get_sura_name_with_isar_bloc.dart';
 import 'bloc_state_manegment/theme_bloc/theme_mode_bloc.dart';
 import 'screens/splash_screen.dart';
 import 'services/iser_service/hive_service.dart';
+import 'services/location_prefs.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final hiveService = HiveService();
   await hiveService.init();
-  runApp(const MyApp());
+  final savedRegion = await LocationPrefs.getRegion();
+  runApp(MyApp(initialRegion: savedRegion));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.initialRegion});
+
+  final String initialRegion;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -35,7 +39,8 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(
           create:
               (context) =>
-                  NamozVaqtlariBloc()..add(GetNamozVaqtiEvent("Toshkent")),
+                  NamozVaqtlariBloc()
+                    ..add(GetNamozVaqtiEvent(widget.initialRegion)),
         ),
       ],
       child: BlocBuilder<ThemeModeBloc, ThemeModeState>(

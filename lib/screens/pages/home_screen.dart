@@ -5,10 +5,12 @@ import 'package:sajda_app/app/constants/globals.dart';
 import 'package:sajda_app/bloc_state_manegment/namoz_vaqtlari/namoz_vaqtlari_bloc.dart';
 import 'package:sajda_app/bloc_state_manegment/theme_bloc/theme_mode_bloc.dart';
 import 'package:sajda_app/screens/pages/about.dart';
+import 'package:sajda_app/screens/pages/map_screen.dart';
 import 'package:sajda_app/screens/pages/murojat.dart';
 import 'package:sajda_app/screens/tabs/duolar.dart';
 import 'package:sajda_app/screens/tabs/hadislar.dart';
 import 'package:sajda_app/screens/tabs/suralar.dart';
+import 'package:sajda_app/services/location_prefs.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,6 +22,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String locationCity = 'Toshkent';
+
+  @override
+  void initState() {
+    super.initState();
+    LocationPrefs.getCity().then((city) {
+      if (mounted) setState(() => locationCity = city);
+    });
+  }
 
   String _formatTime(String time) {
     if (time.isEmpty) return '--:--';
@@ -66,7 +76,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SliverAppBar(
                     pinned: true,
+                    primary: false,
                     elevation: 0,
+                    toolbarHeight: 0,
                     automaticallyImplyLeading: false,
                     backgroundColor:
                         isDark ? const Color(0xFF040C23) : Colors.white,
@@ -79,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     bottom: PreferredSize(
-                      preferredSize: const Size.fromHeight(0),
+                      preferredSize: const Size.fromHeight(50),
                       child: _buildTabBar(isDark),
                     ),
                   ),
@@ -561,20 +573,13 @@ class _HomeScreenState extends State<HomeScreen> {
             Icons.mosque_rounded,
             'Masjidlar',
             isDark,
-            subtitle: 'Tez orada...',
-            onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Tez orada...',
-                  style: GoogleFonts.poppins(),
-                ),
-                backgroundColor: primary,
-                behavior: SnackBarBehavior.floating,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-            ),
+            subtitle: 'Yaqin atrofdagi masjidlar',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const MosqueMapPage()),
+              );
+            },
           ),
           _drawerTile(
             Icons.info_outline_rounded,
@@ -839,6 +844,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       BlocProvider.of<NamozVaqtlariBloc>(
                         context,
                       ).add(GetNamozVaqtiEvent(entry.value));
+                      LocationPrefs.save(entry.key, entry.value);
                       setState(() => locationCity = entry.key);
                       Navigator.pop(ctx);
                     },

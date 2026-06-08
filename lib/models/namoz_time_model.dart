@@ -9,19 +9,20 @@ class NamozTime {
     required this.times,
   });
 
-  // AlAdhan API response parser
-  factory NamozTime.fromAlAdhan(
+  // islomapi.uz response parser
+  // {"region":"Toshkent","date":"2025-06-08T...","times":{...}}
+  factory NamozTime.fromIslomApi(
     Map<String, dynamic> json, {
     required String regionName,
   }) {
-    final timings = json['data']['timings'] as Map<String, dynamic>;
+    final times = json['times'] as Map<String, dynamic>;
     final now = DateTime.now();
     final date =
         '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
     return NamozTime(
       region: regionName,
       date: date,
-      times: Times.fromAlAdhan(timings),
+      times: Times.fromIslomApi(times),
     );
   }
 
@@ -49,24 +50,17 @@ class Times {
     required this.xufton,
   });
 
-  // AlAdhan: Fajr→Bomdod, Sunrise→Quyosh, Dhuhr→Peshin,
-  //          Asr→Asr, Maghrib→Shom, Isha→Xufton
-  factory Times.fromAlAdhan(Map<String, dynamic> t) {
+  // islomapi: tong_saharlik→Bomdod, quyosh→Quyosh, peshin→Peshin,
+  //           asr→Asr, shom_iftor→Shom, hufton→Xufton
+  factory Times.fromIslomApi(Map<String, dynamic> t) {
     return Times(
-      bomdod: _clean(t['Fajr'] ?? ''),
-      quyosh: _clean(t['Sunrise'] ?? ''),
-      peshin: _clean(t['Dhuhr'] ?? ''),
-      asr:    _clean(t['Asr'] ?? ''),
-      shom:   _clean(t['Maghrib'] ?? ''),
-      xufton: _clean(t['Isha'] ?? ''),
+      bomdod: (t['tong_saharlik'] ?? '').toString().trim(),
+      quyosh: (t['quyosh'] ?? '').toString().trim(),
+      peshin: (t['peshin'] ?? '').toString().trim(),
+      asr: (t['asr'] ?? '').toString().trim(),
+      shom: (t['shom_iftor'] ?? '').toString().trim(),
+      xufton: (t['hufton'] ?? '').toString().trim(),
     );
-  }
-
-  // "04:35 (UTC+5)" → "04:35"
-  static String _clean(String raw) {
-    final trimmed = raw.trim();
-    final spaceIdx = trimmed.indexOf(' ');
-    return spaceIdx == -1 ? trimmed : trimmed.substring(0, spaceIdx);
   }
 
   Map<String, dynamic> toJson() => {
