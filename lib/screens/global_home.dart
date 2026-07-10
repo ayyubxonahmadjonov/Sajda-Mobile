@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sajda_app/app/constants/globals.dart';
-import 'package:sajda_app/screens/pages/saved_sura.dart';
+import 'package:sajda_app/screens/pages/namoz_tracker.dart';
 import 'package:sajda_app/screens/pages/tasbeh.dart';
 import 'package:sajda_app/screens/qibla.dart';
 import 'pages/home_screen.dart';
@@ -22,7 +22,7 @@ class _HomeState extends State<Home> {
     QiblahScreen(),
     AmallarScreen(),
     TasbehScreen(),
-    SavedSura(),
+    NamozTrackerScreen(),
   ];
 
   final _navItems = const [
@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
     _NavItem(icon: 'assets/images/compass.png', label: 'Qibla'),
     _NavItem(icon: 'assets/images/water.png', label: 'Amallar'),
     _NavItem(icon: 'assets/images/tasbih.png', label: 'Tasbeh'),
-    _NavItem(icon: 'assets/images/bookmark.png', label: 'Saqlangan'),
+    _NavItem(iconData: Icons.check_circle_outline_rounded, label: 'Namozlarim'),
   ];
 
   @override
@@ -92,12 +92,19 @@ class _HomeState extends State<Home> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(
-              item.icon,
-              color: isSelected ? primary : text,
-              height: 22,
-              width: 22,
-            ),
+            if (item.iconData != null)
+              Icon(
+                item.iconData,
+                color: isSelected ? primary : text,
+                size: 23,
+              )
+            else
+              Image.asset(
+                item.icon!,
+                color: isSelected ? primary : text,
+                height: 22,
+                width: 22,
+              ),
             const SizedBox(height: 4),
             Text(
               item.label,
@@ -116,7 +123,8 @@ class _HomeState extends State<Home> {
 }
 
 class _NavItem {
-  final String icon;
+  final String? icon;
+  final IconData? iconData;
   final String label;
-  const _NavItem({required this.icon, required this.label});
+  const _NavItem({this.icon, this.iconData, required this.label});
 }

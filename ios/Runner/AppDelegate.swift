@@ -11,6 +11,10 @@ import YandexMapsMobile
 
     YMKMapKit.setApiKey("e0100647-eb65-43b3-93e3-9b9acf335042")
 
+    if #available(iOS 10.0, *) {
+      UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
+    }
+
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

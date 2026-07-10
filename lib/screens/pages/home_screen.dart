@@ -1,16 +1,23 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sajda_app/app/constants/globals.dart';
 import 'package:sajda_app/bloc_state_manegment/namoz_vaqtlari/namoz_vaqtlari_bloc.dart';
 import 'package:sajda_app/bloc_state_manegment/theme_bloc/theme_mode_bloc.dart';
+import 'package:sajda_app/models/namoz_time_model.dart';
 import 'package:sajda_app/screens/pages/about.dart';
 import 'package:sajda_app/screens/pages/map_screen.dart';
 import 'package:sajda_app/screens/pages/murojat.dart';
 import 'package:sajda_app/screens/tabs/duolar.dart';
 import 'package:sajda_app/screens/tabs/hadislar.dart';
 import 'package:sajda_app/screens/tabs/suralar.dart';
+import 'package:sajda_app/screens/pages/namoz_tracker.dart';
 import 'package:sajda_app/services/location_prefs.dart';
+import 'package:sajda_app/services/notification_service/notification_service.dart';
+import 'package:sajda_app/utils/uinversal_update_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,6 +29,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   String locationCity = 'Toshkent';
+  bool _notifEnabled = true;
 
   @override
   void initState() {
@@ -29,6 +37,45 @@ class _HomeScreenState extends State<HomeScreen> {
     LocationPrefs.getCity().then((city) {
       if (mounted) setState(() => locationCity = city);
     });
+    NotificationService.isEnabled().then((v) {
+      if (mounted) setState(() => _notifEnabled = v);
+    });
+    // Ekran chizilгач yangilanishni tekshiramiz.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) UpdateManager().checkAndPrompt(context);
+    });
+  }
+
+  Future<void> _toggleNotifications(bool value) async {
+    setState(() => _notifEnabled = value);
+    final state = context.read<NamozVaqtlariBloc>().state;
+    final time =
+        state is SuccesNamozVaqtlariState ? state.time : null;
+    await NotificationService().applyEnabled(value, time: time);
+    if (!mounted) return;
+    _showSnackBar(
+      value ? 'Namoz eslatmalari yoqildi' : 'Namoz eslatmalari o‘chirildi',
+    );
+  }
+
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            style: GoogleFonts.poppins(fontSize: 13, color: Colors.white),
+          ),
+          backgroundColor: primary,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
   }
 
   String _formatTime(String time) {
@@ -57,6 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
+
+  
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -270,6 +319,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Prayer cards or loading
               if (state is SuccesNamozVaqtlariState) ...[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 2, 16, 12),
+                  child: _NextPrayerCountdown(
+                    times: state.time.times,
+                    isDark: isDark,
+                  ),
+                ),
                 SizedBox(
                   height: 104,
                   child: ListView(
@@ -322,13 +378,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
+                  padding: const EdgeInsets.fromLTRB(16, 10, 16, 8),
                   child: _buildRamadanRow(
                     _formatTime(state.time.times.bomdod.toString()),
                     _formatTime(state.time.times.shom.toString()),
                     isDark,
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+                  child: _buildTrackerBanner(isDark),
+                ),
+              ] else if (state is FailureNamozVaqtlariState) ...[
+                _buildPrayerError(context, state.message, isDark),
               ] else ...[
                 const SizedBox(
                   height: 130,
@@ -342,6 +404,76 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+  }
+
+  Widget _buildPrayerError(
+    BuildContext context,
+    String message,
+    bool isDark,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 6, 16, 16),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF121931) : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: orange.withValues(alpha: 0.35)),
+        ),
+        child: Column(
+          children: [
+            Icon(Icons.cloud_off_rounded, color: orange, size: 34),
+            const SizedBox(height: 10),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'Namoz vaqtlarini yuklab bo‘lmadi',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(fontSize: 12, color: text),
+            ),
+            const SizedBox(height: 14),
+            ElevatedButton.icon(
+              onPressed: () => _retryPrayerTimes(context),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primary,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 22,
+                  vertical: 10,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              icon: const Icon(Icons.refresh_rounded, size: 18),
+              label: Text(
+                'Qayta urinish',
+                style: GoogleFonts.poppins(
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _retryPrayerTimes(BuildContext context) async {
+    final region = await LocationPrefs.getRegion();
+    if (!context.mounted) return;
+    context.read<NamozVaqtlariBloc>().add(GetNamozVaqtiEvent(region));
   }
 
   Widget _prayerCard(
@@ -406,6 +538,65 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTrackerBanner(bool isDark) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => const NamozTrackerScreen()),
+        ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [Color(0xFF6A1FA0), Color(0xFF3A1272)],
+            ),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              const Icon(
+                Icons.check_circle_outline_rounded,
+                color: Colors.white,
+                size: 26,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Namozlarim',
+                      style: GoogleFonts.poppins(
+                        fontSize: 14.5,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      'Bugungi namozlaringizni belgilang',
+                      style: GoogleFonts.poppins(
+                        fontSize: 11.5,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: Colors.white70,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -570,6 +761,18 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 12),
 
           _drawerTile(
+            Icons.check_circle_outline_rounded,
+            'Namozlarim',
+            isDark,
+            subtitle: 'O‘qigan namozlaringizni belgilang',
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const NamozTrackerScreen()),
+              );
+            },
+          ),
+          _drawerTile(
             Icons.mosque_rounded,
             'Masjidlar',
             isDark,
@@ -599,6 +802,43 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           const Spacer(),
+
+          // Bildirishnoma toggle
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF121931) : Colors.grey[100],
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.notifications_active_rounded,
+                    color: primary,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Namoz eslatmalari',
+                      style: GoogleFonts.poppins(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w500,
+                        color: isDark ? Colors.white : Colors.black87,
+                      ),
+                    ),
+                  ),
+                  Switch(
+                    value: _notifEnabled,
+                    activeColor: primary,
+                    onChanged: (v) => _toggleNotifications(v),
+                  ),
+                ],
+              ),
+            ),
+          ),
 
           // Theme toggle
           Padding(
@@ -643,10 +883,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
           Padding(
             padding: const EdgeInsets.only(bottom: 16),
-            child: Text(
-              'Versiya: 1.0.7',
-              style: GoogleFonts.poppins(color: text, fontSize: 11),
-              textAlign: TextAlign.center,
+            child: FutureBuilder<PackageInfo>(
+              future: PackageInfo.fromPlatform(),
+              builder: (context, snapshot) {
+                final version = snapshot.data?.version ?? '';
+                return Text(
+                  version.isEmpty ? 'Versiya: —' : 'Versiya: $version',
+                  style: GoogleFonts.poppins(color: text, fontSize: 11),
+                  textAlign: TextAlign.center,
+                );
+              },
             ),
           ),
         ],
@@ -855,6 +1101,171 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ─── Keyingi namozgacha countdown ────────────────────────────────────────────
+
+/// Har soniyada yangilanib, keyingi namozgacha qolgan vaqtni ko'rsatadi.
+/// O'z Timer'ini boshqaradi — ota-ekranni qayta chizmaydi.
+class _NextPrayerCountdown extends StatefulWidget {
+  const _NextPrayerCountdown({required this.times, required this.isDark});
+
+  final Times times;
+  final bool isDark;
+
+  @override
+  State<_NextPrayerCountdown> createState() => _NextPrayerCountdownState();
+}
+
+class _NextPrayerCountdownState extends State<_NextPrayerCountdown> {
+  Timer? _ticker;
+
+  @override
+  void initState() {
+    super.initState();
+    _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _ticker?.cancel();
+    super.dispose();
+  }
+
+  /// "HH:MM" ni bugungi DateTime'ga aylantiradi.
+  DateTime? _todayAt(String raw) {
+    final t = raw.trim();
+    final parts = t.split(':');
+    if (parts.length < 2) return null;
+    final h = int.tryParse(parts[0]);
+    final m = int.tryParse(parts[1]);
+    if (h == null || m == null) return null;
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day, h, m);
+  }
+
+  /// Keyingi namoz nomi va ungacha qolgan vaqt.
+  (String, Duration)? _next() {
+    final now = DateTime.now();
+    final list = <(String, String)>[
+      ('Bomdod', widget.times.bomdod),
+      ('Peshin', widget.times.peshin),
+      ('Asr', widget.times.asr),
+      ('Shom', widget.times.shom),
+      ('Xufton', widget.times.xufton),
+    ];
+
+    for (final e in list) {
+      final dt = _todayAt(e.$2);
+      if (dt != null && dt.isAfter(now)) {
+        return (e.$1, dt.difference(now));
+      }
+    }
+    // Hammasi o'tib bo'lgan — ertangi Bomdod.
+    final bomdod = _todayAt(widget.times.bomdod);
+    if (bomdod != null) {
+      final tomorrow = bomdod.add(const Duration(days: 1));
+      return ('Bomdod', tomorrow.difference(now));
+    }
+    return null;
+  }
+
+  String _fmt(Duration d) {
+    final h = d.inHours;
+    final m = d.inMinutes % 60;
+    final s = d.inSeconds % 60;
+    final mm = m.toString().padLeft(2, '0');
+    final ss = s.toString().padLeft(2, '0');
+    return h > 0 ? '$h:$mm:$ss' : '$mm:$ss';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final next = _next();
+    if (next == null) return const SizedBox.shrink();
+    final (name, remaining) = next;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [Color(0xFF9055FF), Color(0xFF6A1FA0)],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: primary.withValues(alpha: 0.3),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.18),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.access_time_rounded,
+              color: Colors.white,
+              size: 22,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Keyingi namoz',
+                style: GoogleFonts.poppins(
+                  color: Colors.white70,
+                  fontSize: 11.5,
+                ),
+              ),
+              Text(
+                name,
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                'qoldi',
+                style: GoogleFonts.poppins(
+                  color: Colors.white70,
+                  fontSize: 11.5,
+                ),
+              ),
+              Text(
+                _fmt(remaining),
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

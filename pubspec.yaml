@@ -2,7 +2,7 @@ name: sajda_app
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.9+21
+version: 1.0.5+20
 
 environment:
   sdk: ^3.7.2
@@ -34,6 +34,8 @@ dependencies:
   geolocator: ^13.0.4
   google_maps_flutter_ios: ^2.17.0
   yandex_mapkit: ^4.2.1
+  flutter_local_notifications: ^18.0.1
+  timezone: ^0.9.4
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sajda_app/screens/spashing.dart';
-import 'package:sajda_app/utils/uinversal_update_service.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import '../app/constants/globals.dart';
@@ -23,10 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _startFlow() async {
-    await Future.delayed(Duration.zero);
-
-    await UniversalUpdateService().checkForUpdate(context);
-
+    // Update tekshiruvi endi HomeScreen'да bo'ladi (splashда emas).
     await Future.delayed(const Duration(milliseconds: 500));
 
     if (!mounted) return;

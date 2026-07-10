@@ -16,6 +16,36 @@ class _TasbehScreenState extends State<TasbehScreen>
   int counter = 0;
   int allCount = 0;
   String txt = '';
+  String arabicTxt = '';
+  int _selectedPreset = 0; // 0 = Erkin
+
+  // Klassik qisqa tasbihlar — asosiy ekranda tez tanlash uchun.
+  static const _presets = [
+    _Preset(latin: 'Erkin', arabic: '', count: 0),
+    _Preset(latin: 'Subhanalloh', arabic: 'سُبْحَانَ اللّٰه', count: 33),
+    _Preset(latin: 'Alhamdulillah', arabic: 'اَلْحَمْدُ لِلّٰه', count: 33),
+    _Preset(latin: 'Allohu akbar', arabic: 'اَللّٰهُ أَكْبَر', count: 34),
+    _Preset(
+      latin: 'La ilaha illalloh',
+      arabic: 'لَا إِلٰهَ إِلَّا اللّٰه',
+      count: 100,
+    ),
+    _Preset(
+      latin: 'Astag\'firulloh',
+      arabic: 'أَسْتَغْفِرُ اللّٰه',
+      count: 100,
+    ),
+    _Preset(
+      latin: 'Salavot',
+      arabic: 'اَللّٰهُمَّ صَلِّ عَلٰى مُحَمَّد',
+      count: 100,
+    ),
+    _Preset(
+      latin: 'Subhanallohi va bihamdih',
+      arabic: 'سُبْحَانَ اللّٰهِ وَبِحَمْدِهِ',
+      count: 100,
+    ),
+  ];
 
   late final AnimationController _scaleCtrl;
   late final Animation<double> _scaleAnim;
@@ -39,18 +69,55 @@ class _TasbehScreenState extends State<TasbehScreen>
   }
 
   void _onTap() {
-    Vibration.vibrate(duration: 10);
     _scaleCtrl.forward().then((_) => _scaleCtrl.reverse());
 
+    bool advanced = false;
     setState(() {
       if (allCount > 0 && counter >= allCount) {
-        counter = 0;
+        // Joriy zikr tugadi.
+        final nextIdx = _nextInSequence(_selectedPreset);
+        if (nextIdx != null) {
+          // Keyingi zikrga avtomatik o'tamiz; shu bosish uning 1-sanog'i.
+          _loadPreset(nextIdx);
+          counter = 1;
+          advanced = true;
+        } else {
+          // Ketma-ketlik emas yoki oxiri — qaytadan boshlanadi.
+          counter = 1;
+        }
+      } else {
+        counter++;
       }
-      counter++;
     });
+
+    // O'tishni kuchliroq vibratsiya bilan bildiramiz.
+    Vibration.vibrate(duration: advanced ? 60 : 10);
   }
 
   void _reset() => setState(() => counter = 0);
+
+  // Klassik tasbih ketma-ketligi: Subhanalloh(33) → Alhamdulillah(33) →
+  // Allohu akbar(34). Preset indekslari _presets ro'yxatiga mos.
+  static const _sequence = [1, 2, 3];
+
+  /// Ketma-ketlikda joriy presetdan keyingisi (bo'lmasa null).
+  int? _nextInSequence(int current) {
+    final pos = _sequence.indexOf(current);
+    if (pos == -1 || pos == _sequence.length - 1) return null;
+    return _sequence[pos + 1];
+  }
+
+  /// Presetni yuklaydi (setState'siz — _onTap ichida ishlatiladi).
+  void _loadPreset(int i) {
+    final p = _presets[i];
+    _selectedPreset = i;
+    allCount = p.count;
+    arabicTxt = p.arabic;
+    txt = p.count == 0 ? '' : p.latin;
+    counter = 0;
+  }
+
+  void _selectPreset(int i) => setState(() => _loadPreset(i));
 
   double get _progress =>
       allCount > 0 ? (counter / allCount).clamp(0.0, 1.0) : 0.0;
@@ -171,6 +238,21 @@ class _TasbehScreenState extends State<TasbehScreen>
                 ),
               ),
 
+              // Tez tanlanadigan presetlar
+              Padding(
+                padding: const EdgeInsets.only(top: 14),
+                child: SizedBox(
+                  height: 38,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    itemCount: _presets.length,
+                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    itemBuilder: (ctx, i) => _presetChip(i, isDark),
+                  ),
+                ),
+              ),
+
               // Active zikr card
               AnimatedSize(
                 duration: const Duration(milliseconds: 250),
@@ -181,7 +263,7 @@ class _TasbehScreenState extends State<TasbehScreen>
                         padding: const EdgeInsets.fromLTRB(20, 14, 20, 0),
                         child: Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(14),
+                          padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: isDark
                                 ? const Color(0xFF1E2B5E)
@@ -196,16 +278,34 @@ class _TasbehScreenState extends State<TasbehScreen>
                               ),
                             ],
                           ),
-                          child: Text(
-                            txt,
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              color: isDark
-                                  ? Colors.white
-                                  : Colors.black87,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 13,
-                            ),
+                          child: Column(
+                            children: [
+                              if (arabicTxt.isNotEmpty) ...[
+                                Text(
+                                  arabicTxt,
+                                  textAlign: TextAlign.center,
+                                  textDirection: TextDirection.rtl,
+                                  style: GoogleFonts.notoNaskhArabic(
+                                    color: isDark
+                                        ? Colors.white
+                                        : Colors.black87,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 22,
+                                    height: 1.6,
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                              ],
+                              Text(
+                                txt,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  color: primary,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -361,6 +461,76 @@ class _TasbehScreenState extends State<TasbehScreen>
     );
   }
 
+  Widget _presetChip(int i, bool isDark) {
+    final p = _presets[i];
+    final selected = _selectedPreset == i;
+    return GestureDetector(
+      onTap: () => _selectPreset(i),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: selected
+              ? primary
+              : (isDark ? const Color(0xFF1E2B5E) : Colors.white),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: selected
+                ? primary
+                : primary.withValues(alpha: 0.25),
+          ),
+          boxShadow: selected
+              ? [
+                  BoxShadow(
+                    color: primary.withValues(alpha: 0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ]
+              : null,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              p.latin,
+              style: GoogleFonts.poppins(
+                color: selected
+                    ? Colors.white
+                    : (isDark ? Colors.white70 : Colors.black87),
+                fontWeight: FontWeight.w600,
+                fontSize: 12.5,
+              ),
+            ),
+            if (p.count > 0) ...[
+              const SizedBox(width: 6),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 6,
+                  vertical: 1,
+                ),
+                decoration: BoxDecoration(
+                  color: selected
+                      ? Colors.white.withValues(alpha: 0.25)
+                      : primary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  '${p.count}',
+                  style: GoogleFonts.poppins(
+                    color: selected ? Colors.white : primary,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 11,
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
   void _showZikrSheet(bool isDark) {
     showModalBottomSheet(
       context: context,
@@ -477,6 +647,8 @@ class _TasbehScreenState extends State<TasbehScreen>
                       setState(() {
                         allCount = z.count;
                         txt = z.title;
+                        arabicTxt = '';
+                        _selectedPreset = -1;
                         counter = 0;
                       });
                       Navigator.pop(ctx);
@@ -557,6 +729,19 @@ class _Zikr {
   const _Zikr({
     required this.title,
     required this.meaning,
+    required this.count,
+  });
+}
+
+// ─── Tez tanlanadigan preset ─────────────────────────────────────────────────
+
+class _Preset {
+  final String latin;
+  final String arabic;
+  final int count; // 0 = Erkin (cheksiz)
+  const _Preset({
+    required this.latin,
+    required this.arabic,
     required this.count,
   });
 }

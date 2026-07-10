@@ -8,11 +8,14 @@ import 'bloc_state_manegment/theme_bloc/theme_mode_bloc.dart';
 import 'screens/splash_screen.dart';
 import 'services/iser_service/hive_service.dart';
 import 'services/location_prefs.dart';
+import 'services/notification_service/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final hiveService = HiveService();
   await hiveService.init();
+  await NotificationService().init();
+  await NotificationService().requestPermissions();
   final savedRegion = await LocationPrefs.getRegion();
   runApp(MyApp(initialRegion: savedRegion));
 }

@@ -4,104 +4,62 @@ import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// App Store'да ilovaning yangiroq versiyasi bor-yo'qligini tekshiradi.
+class StoreUpdate {
+  final String version;
+  final String notes;
+  const StoreUpdate(this.version, this.notes);
+}
+
 class IOSUpdateService {
   static const String appStoreId = '6754518453';
 
-  /// 🔑 TRUE qaytsa → update bor, navigatsiya to‘xtaydi
-  /// 🔑 FALSE qaytsa → update yo‘q, navigatsiya davom etadi
-  Future<bool> check(BuildContext context) async {
+  /// Do'konда yangiroq versiya bo'lsa uning ma'lumotini qaytaradi, aks holda null.
+  Future<StoreUpdate?> fetchStoreUpdate() async {
     try {
       final packageInfo = await PackageInfo.fromPlatform();
       final currentVersion = packageInfo.version;
 
-      final response = await http.get(
-        Uri.parse('https://itunes.apple.com/lookup?id=$appStoreId'),
-      );
+      final response = await http
+          .get(Uri.parse('https://itunes.apple.com/lookup?id=$appStoreId'))
+          .timeout(const Duration(seconds: 5));
 
-      if (response.statusCode != 200) return false;
+      if (response.statusCode != 200) return null;
 
       final data = json.decode(response.body);
-      if (data['resultCount'] == 0) return false;
+      if ((data['resultCount'] ?? 0) == 0) return null;
 
-      final storeVersion = data['results'][0]['version'];
-      final releaseNotes = data['results'][0]['releaseNotes'] ?? '';
+      final result = data['results'][0];
+      final storeVersion = (result['version'] ?? '').toString();
+      final releaseNotes = (result['releaseNotes'] ?? '').toString();
+      if (storeVersion.isEmpty) return null;
 
       if (_isNewer(storeVersion, currentVersion)) {
-        if (!context.mounted) return false;
-
-        // 🔒 Dialog chiqdi → navigatsiya STOP
-        await _showUpdateDialog(context, storeVersion, releaseNotes);
-        return true;
+        return StoreUpdate(storeVersion, releaseNotes);
       }
     } catch (e) {
       debugPrint('iOS update error: $e');
     }
-    return false;
+    return null;
   }
 
+  /// [store] versiyasi [local]dan yangiroqmi? Raqamsiz segmentlarga chidamli.
   bool _isNewer(String store, String local) {
-    final storeParts = store.split('.').map(int.parse).toList();
-    final localParts = local.split('.').map(int.parse).toList();
-
-    for (int i = 0; i < storeParts.length; i++) {
-      final s = storeParts[i];
-      final l = i < localParts.length ? localParts[i] : 0;
-      if (s > l) return true;
-      if (s < l) return false;
+    final s = store.split('.').map((e) => int.tryParse(e.trim()) ?? 0).toList();
+    final l = local.split('.').map((e) => int.tryParse(e.trim()) ?? 0).toList();
+    final len = s.length > l.length ? s.length : l.length;
+    for (int i = 0; i < len; i++) {
+      final sv = i < s.length ? s[i] : 0;
+      final lv = i < l.length ? l[i] : 0;
+      if (sv > lv) return true;
+      if (sv < lv) return false;
     }
     return false;
   }
 
-  /// ⚠️ MUHIM: Future<void> — await qilinadi
-  Future<void> _showUpdateDialog(
-    BuildContext context,
-    String version,
-    String notes,
-  ) {
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => AlertDialog(
-        title: const Text('Yangi versiya mavjud'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Versiya: $version'),
-            const SizedBox(height: 12),
-            if (notes.isNotEmpty) Text(notes),
-          ],
-        ),
-        actions: [
-          // ✅ Keyinroq → dialog yopiladi → Splash navigatsiya qiladi
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('Keyinroq'),
-          ),
-
-          // 🔒 Yangilash → App Store ochiladi → navigatsiya bo‘lmaydi
-          ElevatedButton(
-            onPressed: () {
-              _openAppStore();
-            },
-            child: const Text('Yangilash'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _openAppStore() async {
-    final url = Uri.parse(
-      'https://apps.apple.com/app/id$appStoreId',
-    );
-
-    if (!await launchUrl(
-      url,
-      mode: LaunchMode.externalApplication,
-    )) {
+  Future<void> openStore() async {
+    final url = Uri.parse('https://apps.apple.com/app/id$appStoreId');
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       debugPrint('App Store ochilmadi');
     }
   }

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sajda_app/app/constants/globals.dart';
 import 'package:sajda_app/screens/pages/tahorat_oliw.dart';
+import 'asmaul_husna_screen.dart';
 import 'guide_data.dart';
 import 'guide_models.dart';
 import 'guide_screen.dart';
@@ -55,6 +56,15 @@ class AmallarScreen extends StatelessWidget {
                 subtitle: g.subtitle,
                 onTap: () => _open(context, GuideScreen(guide: g)),
               ),
+
+            // Allohning 99 ismi
+            _tile(
+              context,
+              icon: 'assets/svgs/g_allah.svg',
+              title: 'Asmaul Husna',
+              subtitle: 'Allohning 99 go‘zal ismi va ma‘nolari',
+              onTap: () => _open(context, const AsmaulHusnaScreen()),
+            ),
           ],
         ),
       ),

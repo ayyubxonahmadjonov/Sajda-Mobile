@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sajda_app/models/namoz_time_model.dart';
+import 'package:sajda_app/services/notification_service/notification_service.dart';
 
 part 'namoz_vaqtlari_event.dart';
 part 'namoz_vaqtlari_state.dart';
@@ -51,6 +54,8 @@ class NamozVaqtlariBloc
           regionName: event.location,
         );
         emit(SuccesNamozVaqtlariState(time));
+        // Namoz vaqtlariga qarab bildirishnomalarni qayta rejalashtiramiz.
+        unawaited(NotificationService().schedulePrayerNotifications(time));
       } else {
         emit(FailureNamozVaqtlariState("Ma'lumot topilmadi"));
       }

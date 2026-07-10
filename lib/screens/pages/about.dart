@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -80,17 +81,23 @@ class AboutPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Text(
-                  'Versiya: 1.0.3',
-                  textAlign: TextAlign.end,
-                  style: GoogleFonts.poppins(
-                    color:
-                        Theme.of(context).brightness == Brightness.light
-                            ? Colors.black
-                            : Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
+                FutureBuilder<PackageInfo>(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (context, snapshot) {
+                    final version = snapshot.data?.version ?? '';
+                    return Text(
+                      version.isEmpty ? 'Versiya: —' : 'Versiya: $version',
+                      textAlign: TextAlign.end,
+                      style: GoogleFonts.poppins(
+                        color:
+                            Theme.of(context).brightness == Brightness.light
+                                ? Colors.black
+                                : Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

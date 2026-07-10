@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sajda_app/app/constants/globals.dart';
 
 class CommentsPage extends StatelessWidget {
@@ -43,7 +44,7 @@ class CommentsPage extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Ushbu ilova hozirda test rejimida faoliyat olib bormoqda. Xato va kamchiliklar uchun oldindan uzur so`raymiz. Ilovada kamchilik yoki ilova yuzasidan savol va takliflar bo`lsa quyidagi email yoki telegram manzilga izoh qoldirishingiz mumkin.',
+              'Sajda ilovasidan foydalanganingiz uchun tashakkur! Ilovada kamchilik sezsangiz yoki savol va takliflaringiz bo`lsa, quyidagi email yoki telegram manzilga izoh qoldirishingiz mumkin. Fikringiz biz uchun juda muhim.',
               style: GoogleFonts.poppins(
                 color:
                     Theme.of(context).brightness == Brightness.light
@@ -84,17 +85,23 @@ class CommentsPage extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 8),
-                Text(
-                  'Versiya: 1.0.3',
-                  textAlign: TextAlign.end,
-                  style: GoogleFonts.poppins(
-                    color:
-                        Theme.of(context).brightness == Brightness.light
-                            ? Colors.black
-                            : Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                  ),
+                FutureBuilder<PackageInfo>(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (context, snapshot) {
+                    final version = snapshot.data?.version ?? '';
+                    return Text(
+                      version.isEmpty ? 'Versiya: —' : 'Versiya: $version',
+                      textAlign: TextAlign.end,
+                      style: GoogleFonts.poppins(
+                        color:
+                            Theme.of(context).brightness == Brightness.light
+                                ? Colors.black
+                                : Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
